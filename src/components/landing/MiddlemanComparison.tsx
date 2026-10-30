@@ -1,15 +1,17 @@
 import { ArrowRight } from 'lucide-react';
 
 import { Container } from '@/components/common/Container';
-import {
-  DEFAULT_COST_PER_ITEM,
-  DEFAULT_MODEL_LABEL,
-  SAVINGS_TABLE_ITEM_COUNTS,
-  TYPICAL_AI_TOOL_RATE_PER_ITEM,
-} from '@/config/pricing';
+import { DEFAULT_MODEL_ID, getModel } from '@/config/models';
+import { COMPETITOR_RATE_PER_ITEM, SAVINGS_TABLE_ITEM_COUNTS } from '@/config/pricing';
+import { DEFAULT_SETTINGS } from '@/config/settings';
 import { MIDDLEMAN } from '@/constants/copy';
 import { formatCount, formatUsd } from '@/lib/format';
 import { cn } from '@/lib/utils';
+import { costPerItem } from '@/utils/costEstimator';
+
+/** Landing comparisons use the default model and photo size, one photo per item. */
+const OUR_RATE_PER_ITEM = costPerItem(DEFAULT_MODEL_ID, DEFAULT_SETTINGS.imageQuality);
+const DEFAULT_MODEL_LABEL = getModel(DEFAULT_MODEL_ID).label;
 
 function Flow({ steps, highlight }: { steps: string[]; highlight?: number }) {
   return (
@@ -47,14 +49,14 @@ export function MiddlemanComparison() {
             <span className="text-[13px] font-medium text-muted-foreground">{MIDDLEMAN.theirsLabel}</span>
             <Flow steps={MIDDLEMAN.theirsSteps} highlight={1} />
             <span className="font-mono text-sm text-muted-foreground">
-              ~{formatUsd(TYPICAL_AI_TOOL_RATE_PER_ITEM)} {MIDDLEMAN.perItem}
+              ~{formatUsd(COMPETITOR_RATE_PER_ITEM)} {MIDDLEMAN.perItem}
             </span>
           </div>
           <div className="flex flex-col gap-3.5 rounded-2xl border-[1.5px] border-accent-warm bg-[#faf7f2] p-5">
             <span className="text-[13px] font-medium text-accent-ink">{MIDDLEMAN.oursLabel}</span>
             <Flow steps={MIDDLEMAN.oursSteps} />
             <span className="font-mono text-sm">
-              ~{formatUsd(DEFAULT_COST_PER_ITEM)} {MIDDLEMAN.perItem}
+              ~{formatUsd(OUR_RATE_PER_ITEM)} {MIDDLEMAN.perItem}
             </span>
           </div>
         </div>
@@ -73,8 +75,8 @@ export function MiddlemanComparison() {
             </thead>
             <tbody className="font-mono">
               {SAVINGS_TABLE_ITEM_COUNTS.map((count) => {
-                const typical = count * TYPICAL_AI_TOOL_RATE_PER_ITEM;
-                const yours = count * DEFAULT_COST_PER_ITEM;
+                const typical = count * COMPETITOR_RATE_PER_ITEM;
+                const yours = count * OUR_RATE_PER_ITEM;
                 return (
                   <tr key={count} className="border-t border-muted">
                     <td className="px-5 py-3.5">{formatCount(count)}</td>

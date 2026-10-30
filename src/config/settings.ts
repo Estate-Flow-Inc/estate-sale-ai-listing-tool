@@ -1,5 +1,7 @@
 /** User settings. Saved to localStorage; labels live in constants/copy.ts (SETTINGS). */
 
+import { DEFAULT_MODEL_ID } from './models';
+
 export type ImageQuality = 'small' | 'balanced' | 'detailed';
 
 /**
@@ -14,10 +16,12 @@ export const IMAGE_QUALITY_PRESETS: Record<ImageQuality, { maxDimension: number;
 
 export interface Settings {
   imageQuality: ImageQuality;
+  modelId: string;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
   imageQuality: 'balanced',
+  modelId: DEFAULT_MODEL_ID,
 };
 
 /** Bump the version if the Settings shape changes in a breaking way. */

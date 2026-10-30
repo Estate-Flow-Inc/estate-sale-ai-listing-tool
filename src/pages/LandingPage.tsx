@@ -3,6 +3,7 @@ import { EstateFlowBand } from '@/components/landing/EstateFlowBand';
 import { Faq } from '@/components/landing/Faq';
 import { Hero } from '@/components/landing/Hero';
 import { MiddlemanComparison } from '@/components/landing/MiddlemanComparison';
+import { SetupSection } from '@/components/landing/SetupSection';
 import { TrustPoints } from '@/components/landing/TrustPoints';
 import { UseOnYourSale } from '@/components/landing/UseOnYourSale';
 import { WalkthroughVideo } from '@/components/landing/WalkthroughVideo';
@@ -15,8 +16,10 @@ export function LandingPage() {
     <>
       <SiteHeader />
       <main>
-        <Hero setup={<SetupCard />} />
-        <WalkthroughVideo />
+        <Hero media={<WalkthroughVideo />} />
+        <SetupSection>
+          <SetupCard />
+        </SetupSection>
         <TrustPoints />
         <MiddlemanComparison />
         <AiHonesty />

@@ -13,3 +13,9 @@ export function formatUsd(value: number) {
 export function formatCount(value: number) {
   return value.toLocaleString('en-US');
 }
+
+/** 512 KB, 2.4 MB */
+export function formatBytes(bytes: number) {
+  if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+}

@@ -5,6 +5,7 @@ import {
   type ImageQuality,
   type Settings,
 } from '@/config/settings';
+import { MODELS } from '@/config/models';
 
 /**
  * Tiny settings store backed by localStorage. Storage can be blocked
@@ -21,6 +22,9 @@ function sanitize(value: unknown): Settings {
   if (value && typeof value === 'object') {
     const v = value as Record<string, unknown>;
     if (isImageQuality(v.imageQuality)) settings.imageQuality = v.imageQuality;
+    if (typeof v.modelId === 'string' && MODELS.some((m) => m.id === v.modelId)) {
+      settings.modelId = v.modelId;
+    }
   }
   return settings;
 }

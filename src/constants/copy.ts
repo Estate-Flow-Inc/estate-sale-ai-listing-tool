@@ -23,11 +23,16 @@ export const HERO = {
   title: 'Turn item photos into listings. Free.',
   body: 'Titles, descriptions, categories and condition notes for every item. Bring your own OpenAI key and pay OpenAI directly. Download an Excel inventory with photo thumbnails and a printable inventory estimate PDF.',
   steps: ['Paste your OpenAI key', 'Add item photos', 'Review and edit', 'Download Excel and PDF'],
+  cta: 'Get started',
+};
+
+export const SETUP_SECTION = {
+  title: 'Start with your photos',
+  body: 'Everything below runs in your browser.',
 };
 
 export const WALKTHROUGH = {
-  title: 'Watch the walkthrough',
-  body: 'From API key to a printed inventory, start to finish.',
+  caption: 'Watch the walkthrough: from API key to a printed inventory.',
   playLabel: 'Play walkthrough video',
   placeholder: 'Walkthrough video coming soon',
 };
@@ -179,4 +184,32 @@ export const SETTINGS = {
       },
     },
   },
+};
+
+export const PHOTOS = {
+  label: 'Item photos',
+  dropTitle: 'Drop photos here, or choose files',
+  dropActive: 'Drop to add',
+  dropHint: 'JPG, PNG or HEIC.',
+  takePhotos: 'Take photos',
+  addMore: 'Add more',
+  clearAll: 'Clear all',
+  remove: 'Remove photo',
+  failed: "Couldn't read this photo",
+  summary: (count: number) => `${count} ${count === 1 ? 'photo' : 'photos'} ready`,
+  processing: (done: number, total: number) => `Preparing ${done} of ${total}`,
+  skipped: (count: number) =>
+    `${count} ${count === 1 ? 'file was' : 'files were'} skipped (not a photo, too large, or over the limit).`,
+};
+
+export const ESTIMATE = {
+  generate: (count: number) => `Generate ${count} ${count === 1 ? 'listing' : 'listings'}`,
+  waiting: 'Preparing photos...',
+  title: 'Before you run',
+  yourCost: (model: string) => `Your cost with ${model}, paid to OpenAI`,
+  competitor: 'Typical AI listing tool',
+  savings: `${ESTATE_FLOW_GLOBAL_NAME} just saved you`,
+  range: (low: string, high: string) => `Likely between ${low} and ${high}, based on current rates.`,
+  confirm: 'Continue',
+  cancel: 'Cancel',
 };
