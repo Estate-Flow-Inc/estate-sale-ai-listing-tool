@@ -163,3 +163,20 @@ export const FOOTER = {
   license: 'MIT licensed.',
   github: 'GitHub',
 };
+
+export const SETTINGS = {
+  title: 'Settings',
+  saved: 'Saved in this browser.',
+  imageQuality: {
+    label: 'Photo size sent to AI',
+    help: 'Photos are converted and shrunk in your browser before sending. Bigger costs more.',
+    options: {
+      small: { label: 'Smaller', description: '768px. Cheapest, fine for most items.' },
+      balanced: { label: 'Balanced', description: '1024px. Recommended.' },
+      detailed: {
+        label: 'Detailed',
+        description: "1536px. Better for labels and maker's marks. Costs more.",
+      },
+    },
+  },
+};
