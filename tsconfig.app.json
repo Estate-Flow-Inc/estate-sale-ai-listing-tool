@@ -20,9 +20,10 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    /* Aliases */
+    "paths": { "@/*": ["./src/*"] }
   },
-  "include": ["src"],
-  "baseUrl": ".",
-  "paths": { "@/*": ["./*"] }
+  "include": ["src"]
 }
