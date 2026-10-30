@@ -1,0 +1,44 @@
+/* Ported from the web repo's EstateFlowLogo. */
+.estate-logo {
+  font-family: 'Montserrat', sans-serif;
+  display: inline-block;
+  position: relative;
+  line-height: 1.2;
+}
+
+.estate-logo .estate {
+  color: var(--charcoal);
+  letter-spacing: 0.02em;
+  font-weight: 500;
+}
+
+.estate-logo .flow {
+  color: var(--accent-warm);
+  margin-left: 0.1em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.estate-logo::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 3px;
+  bottom: -5px;
+  left: 0;
+  background-color: var(--accent-warm);
+  transition: width 0.3s ease-in-out;
+  border-radius: 2px;
+}
+
+.logo-link:hover .estate-logo::after {
+  width: 100%;
+}
+
+.estate-logo-sm {
+  font-size: 1.25rem;
+}
+
+.estate-logo-md {
+  font-size: 1.5rem;
+}

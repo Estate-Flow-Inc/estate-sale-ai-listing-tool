@@ -33,7 +33,7 @@ You pay OpenAI directly at their published rates. With GPT-5.6 Luna, that's roug
 
 AI can describe an item from a photo. It can't see what that item actually sold for. Every price this tool gives is labeled as an estimate.
 
-For real pricing, [Estate Flow](https://joinestateflow.com) pulls comps via eBay Sold listings and Google Lens. Estate Flow imports the Excel file this tool creates, so you can pick up where you left off.
+For real pricing, [Estate Flow](https://joinestateflow.com) finds comps with Google Lens image search, with eBay Sold listings one tap away to verify. Estate Flow imports the Excel file this tool creates, so you can pick up where you left off.
 
 ---
 
