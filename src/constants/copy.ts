@@ -66,7 +66,7 @@ export const MIDDLEMAN = {
   tableSaved: `${ESTATE_FLOW_GLOBAL_NAME} just saved you`,
   youreWelcome: "You're welcome.",
   footnote:
-    "Typical rate based on popular estate sale AI add-ons. Your cost assumes one photo per item; OpenAI's actual bill varies with photo count and output length.",
+    "Typical range: bulk credit pricing at the low end, popular ~100-item packages at the high end (those often include extras like photo enhancement). Your cost assumes one photo per item; OpenAI's actual bill varies with photo count and output length.",
 };
 
 export const AI_HONESTY = {
@@ -206,10 +206,11 @@ export const ESTIMATE = {
   generate: (count: number) => `Generate ${count} ${count === 1 ? 'listing' : 'listings'}`,
   waiting: 'Preparing photos...',
   title: 'Before you run',
-  yourCost: (model: string) => `Your cost with ${model}, paid to OpenAI`,
+  yourCost: 'Your cost, using your own AI',
   competitor: 'Typical AI listing tool',
   savings: `${ESTATE_FLOW_GLOBAL_NAME} just saved you`,
-  range: (low: string, high: string) => `Likely between ${low} and ${high}, based on current rates.`,
+  footnote: (model: string, low: string, high: string) =>
+    `Using ${model}, billed by OpenAI to your account. Likely between ${low} and ${high} at current rates.`,
   confirm: 'Continue',
   cancel: 'Cancel',
 };

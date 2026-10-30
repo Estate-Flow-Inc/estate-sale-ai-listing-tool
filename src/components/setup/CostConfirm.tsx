@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { getModel } from '@/config/models';
 import { ESTIMATE } from '@/constants/copy';
-import { formatUsd } from '@/lib/format';
+import { formatUsd, formatUsdRange } from '@/lib/format';
 import type { CostEstimate } from '@/utils/costEstimator';
 
 /** "Here's what this should cost. Continue?" shown before any API call. */
@@ -25,20 +25,24 @@ export function CostConfirm({
       <span className="text-sm font-semibold">{ESTIMATE.title}</span>
       <dl className="flex flex-col gap-2 text-sm">
         <div className="flex justify-between gap-3">
-          <dt>{ESTIMATE.yourCost(getModel(modelId).label)}</dt>
+          <dt>{ESTIMATE.yourCost}</dt>
           <dd className="font-mono">~{formatUsd(estimate.expected)}</dd>
         </div>
         <div className="flex justify-between gap-3 text-muted-foreground">
           <dt>{ESTIMATE.competitor}</dt>
-          <dd className="font-mono line-through">~{formatUsd(estimate.competitor)}</dd>
+          <dd className="font-mono line-through">
+            {formatUsdRange(estimate.competitor.low, estimate.competitor.high)}
+          </dd>
         </div>
         <div className="flex justify-between gap-3 border-t border-border pt-2 font-semibold">
           <dt>{ESTIMATE.savings}</dt>
-          <dd className="font-mono text-accent-ink">~{formatUsd(estimate.savings)}</dd>
+          <dd className="font-mono text-accent-ink">
+            {formatUsdRange(estimate.savings.low, estimate.savings.high)}
+          </dd>
         </div>
       </dl>
       <p className="text-xs text-muted-foreground">
-        {ESTIMATE.range(formatUsd(estimate.low), formatUsd(estimate.high))}
+        {ESTIMATE.footnote(getModel(modelId).label, formatUsd(estimate.low), formatUsd(estimate.high))}
       </p>
       <div className="flex justify-end gap-2">
         <Button variant="outline" size="xl" onClick={onCancel}>

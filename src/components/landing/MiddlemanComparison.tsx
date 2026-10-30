@@ -5,7 +5,7 @@ import { DEFAULT_MODEL_ID, getModel } from '@/config/models';
 import { COMPETITOR_RATE_PER_ITEM, SAVINGS_TABLE_ITEM_COUNTS } from '@/config/pricing';
 import { DEFAULT_SETTINGS } from '@/config/settings';
 import { MIDDLEMAN } from '@/constants/copy';
-import { formatCount, formatUsd } from '@/lib/format';
+import { formatCount, formatUsd, formatUsdRange } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { costPerItem } from '@/utils/costEstimator';
 
@@ -49,7 +49,7 @@ export function MiddlemanComparison() {
             <span className="text-[13px] font-medium text-muted-foreground">{MIDDLEMAN.theirsLabel}</span>
             <Flow steps={MIDDLEMAN.theirsSteps} highlight={1} />
             <span className="font-mono text-sm text-muted-foreground">
-              ~{formatUsd(COMPETITOR_RATE_PER_ITEM)} {MIDDLEMAN.perItem}
+              {formatUsdRange(COMPETITOR_RATE_PER_ITEM.low, COMPETITOR_RATE_PER_ITEM.high)} {MIDDLEMAN.perItem}
             </span>
           </div>
           <div className="flex flex-col gap-3.5 rounded-2xl border-[1.5px] border-accent-warm bg-[#faf7f2] p-5">
@@ -75,15 +75,16 @@ export function MiddlemanComparison() {
             </thead>
             <tbody className="font-mono">
               {SAVINGS_TABLE_ITEM_COUNTS.map((count) => {
-                const typical = count * COMPETITOR_RATE_PER_ITEM;
+                const low = count * COMPETITOR_RATE_PER_ITEM.low;
+                const high = count * COMPETITOR_RATE_PER_ITEM.high;
                 const yours = count * OUR_RATE_PER_ITEM;
                 return (
                   <tr key={count} className="border-t border-muted">
                     <td className="px-5 py-3.5">{formatCount(count)}</td>
-                    <td className="px-5 py-3.5 text-muted-foreground">{formatUsd(typical)}</td>
+                    <td className="px-5 py-3.5 text-muted-foreground">{formatUsdRange(low, high)}</td>
                     <td className="px-5 py-3.5">{formatUsd(yours)}</td>
                     <td className="px-5 py-3.5 font-medium text-accent-ink">
-                      {formatUsd(typical - yours)}
+                      {formatUsdRange(low - yours, high - yours)}
                     </td>
                   </tr>
                 );

@@ -1,8 +1,9 @@
 /**
- * Baseline for "here's what a typical AI listing tool would charge you",
- * per item. Kept conservative so the savings claim is never inflated.
+ * What typical AI listing tools charge per item, as a range.
+ * low: bulk credit pricing. high: advertised ~100-item packages (~$20),
+ * which often bundle extras like photo enhancement.
  */
-export const COMPETITOR_RATE_PER_ITEM = 0.05;
+export const COMPETITOR_RATE_PER_ITEM = { low: 0.05, high: 0.2 };
 
 /** Item counts shown in the landing page savings table. */
 export const SAVINGS_TABLE_ITEM_COUNTS = [100, 500, 1000] as const;

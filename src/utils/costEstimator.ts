@@ -18,9 +18,9 @@ export interface CostEstimate {
   low: number;
   high: number;
   perItem: number;
-  /** What a typical AI listing tool would charge for the same items. */
-  competitor: number;
-  savings: number;
+  /** What typical AI listing tools charge for the same items, as a range. */
+  competitor: { low: number; high: number };
+  savings: { low: number; high: number };
 }
 
 /** Expected cost in USD of generating listings with a given model. */
@@ -32,7 +32,10 @@ export function estimateCost({ modelId, itemCount, photoCount, imageQuality }: E
 
   const expected =
     (inputTokens / 1_000_000) * model.inputPer1M + (outputTokens / 1_000_000) * model.outputPer1M;
-  const competitor = itemCount * COMPETITOR_RATE_PER_ITEM;
+  const competitor = {
+    low: itemCount * COMPETITOR_RATE_PER_ITEM.low,
+    high: itemCount * COMPETITOR_RATE_PER_ITEM.high,
+  };
 
   return {
     expected,
@@ -40,7 +43,10 @@ export function estimateCost({ modelId, itemCount, photoCount, imageQuality }: E
     high: expected * ESTIMATE_RANGE.high,
     perItem: itemCount > 0 ? expected / itemCount : 0,
     competitor,
-    savings: Math.max(0, competitor - expected),
+    savings: {
+      low: Math.max(0, competitor.low - expected),
+      high: Math.max(0, competitor.high - expected),
+    },
   };
 }
 
