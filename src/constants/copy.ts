@@ -69,28 +69,26 @@ export const MIDDLEMAN = {
     'Estimates assume one photo per item and typical listing length. Actual AI costs vary with photo size, model and how much is written. Third-party pricing reflects publicly listed credit packages, which may include other features.',
 };
 
-export const AI_HONESTY = {
-  title: 'AI writes great copy. It guesses at prices.',
-  paragraphs: [
-    "From a photo, AI can name the item, describe it and spot condition issues. It can't see what the same item actually sold for last week. So every price here is labeled for what it is: an estimate.",
-    `When pricing matters, ${ESTATE_FLOW_GLOBAL_NAME} finds comps with Google Lens image search and puts eBay Sold listings one tap away so you can verify, right inside your sale workflow.`,
+export const ESTATE_FLOW_HUB = {
+  eyebrow: `So what does ${ESTATE_FLOW_GLOBAL_NAME} do?`,
+  title: 'Listings are the easy part. We run the rest of the business.',
+  theirs: 'Other AI listing tools are an AI middleman.',
+  ours: `${ESTATE_FLOW_GLOBAL_NAME} is the hub for your whole estate sale business.`,
+  cta: 'Sign up and import your file',
+  features: [
+    { title: 'Team management', body: 'Bring your crew and flex workers into every sale.' },
+    {
+      title: 'Comp lookup',
+      body: 'Finds comps with Google Lens image search, with eBay Sold listings one tap away.',
+    },
+    { title: 'Organized inventory', body: 'Every sale, room and item in folders that make sense.' },
+    { title: 'Labels and barcodes', body: 'Print price labels with barcodes your team can scan.' },
+    { title: 'Push to EstateSales.NET', body: 'Send your sale and items over without retyping.' },
+    { title: 'Bring your own POS', body: 'Get your inventory into Square or Clover.' },
+    { title: 'Client reports', body: 'Clean summaries and reports to hand your clients.' },
+    { title: 'Sale analytics', body: 'Numbers for each sale and across your whole business.' },
+    { title: 'Wage tracking', body: 'Track pay for your team and flex workers.' },
   ],
-  cta: `See real comps in ${ESTATE_FLOW_GLOBAL_NAME}`,
-  sample: {
-    photo: 'Item photo',
-    titleLabel: 'Title',
-    title: 'Mid-Century Teak Sideboard, 4 Drawers, Sliding Doors',
-    descriptionLabel: 'Description',
-    description:
-      'Low teak sideboard with four center drawers flanked by two sliding doors. Tapered legs, original pulls.',
-    categoryLabel: 'Category',
-    category: 'Furniture › Sideboards',
-    conditionLabel: 'Condition',
-    condition: 'Light surface wear on top',
-    estimateLabel: 'AI estimate',
-    estimate: '$[LOW] to $[HIGH]',
-    estimateTag: 'Guess from photo, not sold data',
-  },
 };
 
 export const USE_ON_SALE = {
@@ -121,20 +119,6 @@ export const ESTATE_FLOW_BAND = {
   ],
   cta: 'Sign up and import your file',
   note: 'Bring your Excel file to get started quickly.',
-  features: [
-    {
-      title: 'Real comps, not guesses',
-      body: 'Finds comps with Google Lens image search, with eBay Sold listings one tap away to verify.',
-    },
-    {
-      title: 'Sell everywhere',
-      body: 'Send items to your Square POS with printable barcodes, and sync to EstateSales.NET, LiveAuctioneers and more.',
-    },
-    {
-      title: 'Run the sale from your phone',
-      body: 'The iOS app for photos, pricing and inventory in the field.',
-    },
-  ],
 };
 
 export const FAQ = {

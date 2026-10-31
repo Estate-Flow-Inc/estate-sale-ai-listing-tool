@@ -1,5 +1,5 @@
-import { AiHonesty } from '@/components/landing/AiHonesty';
 import { EstateFlowBand } from '@/components/landing/EstateFlowBand';
+import { EstateFlowHub } from '@/components/landing/EstateFlowHub';
 import { Faq } from '@/components/landing/Faq';
 import { Hero } from '@/components/landing/Hero';
 import { MiddlemanComparison } from '@/components/landing/MiddlemanComparison';
@@ -24,7 +24,7 @@ export function LandingPage() {
         <ResultsSection />
         <TrustPoints />
         <MiddlemanComparison />
-        <AiHonesty />
+        <EstateFlowHub />
         <UseOnYourSale />
         <EstateFlowBand />
         <Faq />
