@@ -24,3 +24,20 @@ export function formatBytes(bytes: number) {
 export function formatUsdRange(low: number, high: number) {
   return `${formatUsd(low)} to ${formatUsd(high)}`;
 }
+
+const usdWhole = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  maximumFractionDigits: 0,
+});
+
+/** $120. For resale values and shipping, where cents are false precision. */
+export function formatUsdWhole(value: number) {
+  return usdWhole.format(value);
+}
+
+/** 72 × 18 × 30 in (missing sides dropped). Null if nothing is known. */
+export function formatDimensions(w: number | null, d: number | null, h: number | null) {
+  const parts = [w, d, h].filter((n): n is number => typeof n === 'number' && n > 0);
+  return parts.length ? `${parts.map((n) => Math.round(n)).join(' × ')} in` : null;
+}

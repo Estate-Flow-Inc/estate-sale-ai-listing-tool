@@ -7,10 +7,10 @@ import { DEFAULT_SETTINGS } from '@/config/settings';
 import { MIDDLEMAN } from '@/constants/copy';
 import { formatCount, formatUsd, formatUsdRange } from '@/lib/format';
 import { cn } from '@/lib/utils';
-import { costPerItem } from '@/utils/costEstimator';
+import { costPerItem, roundUpForDisplay } from '@/utils/costEstimator';
 
-/** Landing comparisons use the default model and photo size, one photo per item. */
-const OUR_RATE_PER_ITEM = costPerItem(DEFAULT_MODEL_ID, DEFAULT_SETTINGS.imageQuality);
+/** Default model and photo size, one photo per item, rounded up so the advertised number is safe. */
+const OUR_RATE_PER_ITEM = roundUpForDisplay(costPerItem(DEFAULT_MODEL_ID, DEFAULT_SETTINGS.imageQuality));
 const DEFAULT_MODEL_LABEL = getModel(DEFAULT_MODEL_ID).label;
 
 function Flow({ steps, highlight }: { steps: string[]; highlight?: number }) {
@@ -56,7 +56,7 @@ export function MiddlemanComparison() {
             <span className="text-[13px] font-medium text-accent-ink">{MIDDLEMAN.oursLabel}</span>
             <Flow steps={MIDDLEMAN.oursSteps} />
             <span className="font-mono text-sm">
-              ~{formatUsd(OUR_RATE_PER_ITEM)} {MIDDLEMAN.perItem}
+              ~{formatUsd(OUR_RATE_PER_ITEM)} {MIDDLEMAN.perItemEstimated}
             </span>
           </div>
         </div>

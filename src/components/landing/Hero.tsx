@@ -16,17 +16,7 @@ export function Hero({ media }: { media: ReactNode }) {
           <h1 className="mb-5 font-serif text-5xl leading-[1.08] tracking-tight text-balance md:text-[56px]">
             {HERO.title}
           </h1>
-          <p className="mb-8 max-w-[30em] text-lg text-muted-foreground text-pretty">{HERO.body}</p>
-          <ol id="how" className="mb-9 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {HERO.steps.map((step, i) => (
-              <li key={step} className="flex items-baseline gap-3">
-                <span className="font-mono text-[13px] text-accent-ink">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <span className="text-[15px]">{step}</span>
-              </li>
-            ))}
-          </ol>
+          <p className="mb-9 max-w-[30em] text-lg text-muted-foreground text-pretty">{HERO.body}</p>
           <a href="#start" className={buttonVariants({ size: 'xl' })}>
             {HERO.cta}
           </a>

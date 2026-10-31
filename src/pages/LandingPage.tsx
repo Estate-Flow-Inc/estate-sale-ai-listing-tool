@@ -8,6 +8,7 @@ import { TrustPoints } from '@/components/landing/TrustPoints';
 import { UseOnYourSale } from '@/components/landing/UseOnYourSale';
 import { WalkthroughVideo } from '@/components/landing/WalkthroughVideo';
 import { SiteFooter } from '@/components/layout/SiteFooter';
+import { ResultsSection } from '@/components/results/ResultsSection';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SetupCard } from '@/components/setup/SetupCard';
 
@@ -20,6 +21,7 @@ export function LandingPage() {
         <SetupSection>
           <SetupCard />
         </SetupSection>
+        <ResultsSection />
         <TrustPoints />
         <MiddlemanComparison />
         <AiHonesty />

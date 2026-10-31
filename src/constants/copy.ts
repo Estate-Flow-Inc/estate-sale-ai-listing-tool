@@ -12,7 +12,7 @@ export const ESTATE_FLOW_GLOBAL_NAME = 'Estate Flow';
 export const TOOL_NAME = 'AI Estate Sale Listing';
 
 export const NAV = {
-  howItWorks: 'How it works',
+  tryItNow: 'Try it now',
   faq: 'FAQ',
   source: 'View source',
   tryEstateFlow: `Try ${ESTATE_FLOW_GLOBAL_NAME}`,
@@ -20,9 +20,8 @@ export const NAV = {
 
 export const HERO = {
   eyebrow: 'Free · Open source · No account',
-  title: 'Turn item photos into listings. Free.',
-  body: 'Titles, descriptions, categories and condition notes for every item. Bring your own OpenAI key and pay OpenAI directly. Download an Excel inventory with photo thumbnails and a printable inventory estimate PDF.',
-  steps: ['Paste your OpenAI key', 'Add item photos', 'Review and edit', 'Download Excel and PDF'],
+  title: 'DIY AI listings. Pay for AI directly.',
+  body: 'Upload item photos and get titles, descriptions, condition notes and estimated resale values. Use your own OpenAI key and pay OpenAI directly. No credits to buy. No markup.',
   cta: 'Get started',
 };
 
@@ -47,26 +46,27 @@ export const TRUST_POINTS = [
     body: `Your browser talks to OpenAI directly. Nothing passes through ${ESTATE_FLOW_GLOBAL_NAME}. No tracking on this page.`,
   },
   {
-    title: 'You pay OpenAI, not us',
+    title: 'Your AI. Your API key. Your money.',
     body: 'No subscription, no markup. Read every line of code on GitHub, or run your own copy.',
   },
 ];
 
 export const MIDDLEMAN = {
-  title: 'Most AI listing tools are a middleman.',
-  body: "They take your photos, hand them to OpenAI, and charge you a markup per item. We removed the middleman. You pay OpenAI's actual price and see it before you run.",
-  theirsLabel: 'Other AI listing tools',
-  theirsSteps: ['Your photos', 'Middleman + markup', 'OpenAI'],
-  oursLabel: 'This tool',
+  title: 'Why pay someone else a markup to use AI?',
+  body: 'AI listing tools often bundle AI usage into credits and charge a premium. We take a different approach: bring your own OpenAI key, see the estimated cost upfront, and pay OpenAI directly. No credits to buy. No markup from us.',
+  theirsLabel: 'Third-party AI listing tools',
+  theirsSteps: ['Your photos', 'Bundled credits + markup', 'AI'],
+  oursLabel: `${ESTATE_FLOW_GLOBAL_NAME}'s free tool`,
   oursSteps: ['Your photos', 'OpenAI'],
   perItem: 'per item',
+  perItemEstimated: 'per item, estimated average',
   tableItems: 'Items',
   tableTypical: 'Typical AI listing tool',
-  tableYou: 'You, with',
-  tableSaved: `${ESTATE_FLOW_GLOBAL_NAME} just saved you`,
+  tableYou: 'Your cost with',
+  tableSaved: 'Potential savings',
   youreWelcome: "You're welcome.",
   footnote:
-    "Typical range: bulk credit pricing at the low end, popular ~100-item packages at the high end (those often include extras like photo enhancement). Your cost assumes one photo per item; OpenAI's actual bill varies with photo count and output length.",
+    'Estimates assume one photo per item and typical listing length. Actual AI costs vary with photo size, model and how much is written. Third-party pricing reflects publicly listed credit packages, which may include other features.',
 };
 
 export const AI_HONESTY = {
@@ -208,9 +208,95 @@ export const ESTIMATE = {
   title: 'Before you run',
   yourCost: 'Your cost, using your own AI',
   competitor: 'Typical AI listing tool',
-  savings: `${ESTATE_FLOW_GLOBAL_NAME} just saved you`,
+  savings: `${ESTATE_FLOW_GLOBAL_NAME} will save you`,
   footnote: (model: string, low: string, high: string) =>
     `Using ${model}, billed by OpenAI to your account. Likely between ${low} and ${high} at current rates.`,
-  confirm: 'Continue',
+  confirm: (count: number) => `Generate ${count} ${count === 1 ? 'listing' : 'listings'}`,
   cancel: 'Cancel',
+};
+
+export const WIZARD = {
+  steps: { key: 'Connect your AI', model: 'Pick a model', cost: 'Check the cost', run: 'Writing listings' },
+  back: 'Back',
+  next: 'Continue',
+  close: 'Close',
+  key: {
+    providerLabel: 'AI provider',
+    comingSoon: 'Coming soon',
+    label: 'API key',
+    show: 'Show',
+    hide: 'Hide',
+    getKey: 'Get a key',
+    note: `Saved in this browser tab only and cleared when you close it. Sent only to your AI provider, never to ${ESTATE_FLOW_GLOBAL_NAME}.`,
+    checking: 'Checking key...',
+    invalid: "That key didn't work. Check it and try again.",
+    unreachable: "Couldn't reach the provider. Check your connection and try again.",
+    change: 'Change key',
+  },
+  model: {
+    help: 'Cost per 100 items at your photo size.',
+    recommended: 'Recommended',
+    per100: 'per 100 items',
+    descriptions: {
+      'gpt-5.6-luna': 'Cheapest. Great for most items.',
+      'gpt-5.4-mini': 'A bit sharper on brands and details.',
+      'gpt-5.6-terra': 'Most detailed. For valuable or tricky items.',
+    } as Record<string, string>,
+  },
+  run: {
+    progress: (done: number, total: number) => `${done} of ${total} done`,
+    spent: (amount: string) => `Spent so far: ${amount}`,
+    failed: (count: number) => `${count} failed`,
+    background: 'You can close this. Listings keep writing in the background.',
+    stop: 'Stop',
+    view: 'View listings',
+    done: 'All done',
+    fixKey: 'Fix key',
+  },
+};
+
+export const RESULTS = {
+  title: 'Your listings',
+  summary: (done: number, total: number) => `${done} of ${total} ready`,
+  spent: (actual: string, estimated: string) => `Spent ${actual} (estimated ${estimated})`,
+  retry: 'Retry failed',
+  writing: 'Writing...',
+  queued: 'Waiting',
+  failed: 'Failed',
+  open: 'View details',
+};
+
+export const ITEM_DETAIL = {
+  close: 'Close',
+  copy: 'Copy',
+  copied: 'Copied',
+  sections: {
+    description: 'Description',
+    details: 'Details',
+    condition: 'Condition',
+    shipping: 'Shipping',
+    notable: 'Worth noting',
+    verify: 'Check before you sell',
+    keywords: 'Keywords',
+  },
+  labels: {
+    title: 'Title',
+    brand: 'Brand',
+    make: 'Make',
+    model: 'Model',
+    color: 'Color',
+    materials: 'Materials',
+    style: 'Style',
+    era: 'Era',
+    dimensions: 'Dimensions',
+    weight: 'Weight',
+  },
+  estimated: '(estimated)',
+  value: 'Estimated resale value',
+  valueTag: 'AI estimate from photos, not sold data',
+  confidence: (level: string) => `${level[0].toUpperCase()}${level.slice(1)} confidence`,
+  shippingNote: 'Rough estimate. Get a real quote before you promise a price.',
+  pickupOnly: 'Local pickup only',
+  upsell: `Want real comps? ${ESTATE_FLOW_GLOBAL_NAME} finds them with Google Lens image search.`,
+  upsellCta: `Try ${ESTATE_FLOW_GLOBAL_NAME}`,
 };

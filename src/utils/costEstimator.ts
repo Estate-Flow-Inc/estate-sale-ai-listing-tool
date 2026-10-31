@@ -2,6 +2,7 @@ import { ESTIMATE_RANGE, TOKEN_ESTIMATES } from '@/config/estimates';
 import { getModel } from '@/config/models';
 import { COMPETITOR_RATE_PER_ITEM } from '@/config/pricing';
 import type { ImageQuality } from '@/config/settings';
+import type { TokenUsage } from '@/providers/types';
 
 export interface EstimateInput {
   modelId: string;
@@ -53,4 +54,20 @@ export function estimateCost({ modelId, itemCount, photoCount, imageQuality }: E
 /** Cost per item for one photo per item. Used for the landing page comparisons. */
 export function costPerItem(modelId: string, imageQuality: ImageQuality) {
   return estimateCost({ modelId, itemCount: 1, photoCount: 1, imageQuality }).expected;
+}
+
+/** Actual cost from the token counts the provider reported, cached input at the cached rate. */
+export function costFromUsage(modelId: string, usage: TokenUsage) {
+  const model = getModel(modelId);
+  const cached = Math.min(usage.cachedInputTokens, usage.inputTokens);
+  return (
+    ((usage.inputTokens - cached) / 1_000_000) * model.inputPer1M +
+    (cached / 1_000_000) * model.cachedInputPer1M +
+    (usage.outputTokens / 1_000_000) * model.outputPer1M
+  );
+}
+
+/** Rounded up to the next tenth of a cent, for numbers we advertise. Never undersell the cost. */
+export function roundUpForDisplay(costPerItem: number) {
+  return Math.ceil(costPerItem * 1000) / 1000;
 }

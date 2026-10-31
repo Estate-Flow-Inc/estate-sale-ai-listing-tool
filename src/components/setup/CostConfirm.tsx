@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { getModel } from '@/config/models';
-import { ESTIMATE } from '@/constants/copy';
+import { ESTIMATE, WIZARD } from '@/constants/copy';
 import { formatUsd, formatUsdRange } from '@/lib/format';
 import type { CostEstimate } from '@/utils/costEstimator';
 
@@ -8,22 +8,19 @@ import type { CostEstimate } from '@/utils/costEstimator';
 export function CostConfirm({
   estimate,
   modelId,
+  itemCount,
   onConfirm,
-  onCancel,
+  onBack,
 }: {
   estimate: CostEstimate;
   modelId: string;
+  itemCount: number;
   onConfirm: () => void;
-  onCancel: () => void;
+  onBack: () => void;
 }) {
   return (
-    <div
-      role="region"
-      aria-label={ESTIMATE.title}
-      className="flex flex-col gap-4 rounded-xl border-[1.5px] border-accent-warm bg-[#faf7f2] p-4"
-    >
-      <span className="text-sm font-semibold">{ESTIMATE.title}</span>
-      <dl className="flex flex-col gap-2 text-sm">
+    <div className="flex flex-col gap-5">
+      <dl className="flex flex-col gap-2.5 rounded-xl border-[1.5px] border-accent-warm bg-[#faf7f2] p-4 text-sm">
         <div className="flex justify-between gap-3">
           <dt>{ESTIMATE.yourCost}</dt>
           <dd className="font-mono">~{formatUsd(estimate.expected)}</dd>
@@ -34,7 +31,7 @@ export function CostConfirm({
             {formatUsdRange(estimate.competitor.low, estimate.competitor.high)}
           </dd>
         </div>
-        <div className="flex justify-between gap-3 border-t border-border pt-2 font-semibold">
+        <div className="flex justify-between gap-3 border-t border-border pt-2.5 font-semibold">
           <dt>{ESTIMATE.savings}</dt>
           <dd className="font-mono text-accent-ink">
             {formatUsdRange(estimate.savings.low, estimate.savings.high)}
@@ -45,11 +42,11 @@ export function CostConfirm({
         {ESTIMATE.footnote(getModel(modelId).label, formatUsd(estimate.low), formatUsd(estimate.high))}
       </p>
       <div className="flex justify-end gap-2">
-        <Button variant="outline" size="xl" onClick={onCancel}>
-          {ESTIMATE.cancel}
+        <Button variant="outline" size="xl" onClick={onBack}>
+          {WIZARD.back}
         </Button>
         <Button size="xl" onClick={onConfirm} autoFocus>
-          {ESTIMATE.confirm}
+          {ESTIMATE.confirm(itemCount)}
         </Button>
       </div>
     </div>

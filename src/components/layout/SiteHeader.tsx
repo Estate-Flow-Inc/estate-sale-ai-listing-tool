@@ -22,8 +22,8 @@ export function SiteHeader() {
           <span className="text-sm font-medium text-muted-foreground">{TOOL_NAME}</span>
         </div>
         <nav className="flex flex-wrap items-center gap-1">
-          <a href="#how" className={cn(navLink, 'hidden sm:inline-flex')}>
-            {NAV.howItWorks}
+          <a href="#start" className={cn(navLink, 'hidden sm:inline-flex')}>
+            {NAV.tryItNow}
           </a>
           <a href="#faq" className={cn(navLink, 'hidden sm:inline-flex')}>
             {NAV.faq}

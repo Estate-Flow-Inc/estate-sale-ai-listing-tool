@@ -1,0 +1,28 @@
+import type { ProviderId } from '@/config/models';
+
+/** API keys live in sessionStorage: this tab only, gone when it closes. */
+const storageKey = (provider: ProviderId) => `ai-estate-sale-listing:key:${provider}`;
+
+export function getApiKey(provider: ProviderId): string {
+  try {
+    return sessionStorage.getItem(storageKey(provider)) ?? '';
+  } catch {
+    return '';
+  }
+}
+
+export function setApiKey(provider: ProviderId, key: string) {
+  try {
+    sessionStorage.setItem(storageKey(provider), key);
+  } catch {
+    // Storage blocked: the key still works for this page load.
+  }
+}
+
+export function clearApiKey(provider: ProviderId) {
+  try {
+    sessionStorage.removeItem(storageKey(provider));
+  } catch {
+    // Nothing to clear.
+  }
+}

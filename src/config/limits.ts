@@ -10,3 +10,6 @@ export const PHOTO_PROCESSING_CONCURRENCY = 3;
 
 /** What the file picker accepts. HEIC listed by extension because some browsers report no type. */
 export const ACCEPTED_IMAGE_TYPES = 'image/*,.heic,.heif';
+
+/** Listings generated at once. Low enough to stay under new accounts' rate limits. */
+export const GENERATION_CONCURRENCY = 4;

@@ -7,8 +7,8 @@ import { usePhotoStore } from '@/store/photoStore';
 import { PhotoDropzone } from './PhotoDropzone';
 import { PhotoGrid } from './PhotoGrid';
 
-/** Step 3 of the setup card: add, preview and remove photos. */
-export function PhotoIntake({ step }: { step: number }) {
+/** Add, preview and remove photos. */
+export function PhotoIntake() {
   const { photos, addFiles, removePhoto, clearPhotos } = usePhotoStore();
   const [skipped, setSkipped] = useState(0);
 
@@ -20,9 +20,7 @@ export function PhotoIntake({ step }: { step: number }) {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3">
-        <span className="text-sm font-medium">
-          {step}. {PHOTOS.label}
-        </span>
+        <span className="text-sm font-medium">{PHOTOS.label}</span>
         {photos.length > 0 && (
           <Button variant="ghost" size="sm" onClick={() => { clearPhotos(); setSkipped(0); }}>
             {PHOTOS.clearAll}
