@@ -15,7 +15,6 @@ export const NAV = {
   tryItNow: 'Try it now',
   faq: 'FAQ',
   source: 'View source',
-  tryEstateFlow: `Try ${ESTATE_FLOW_GLOBAL_NAME}`,
 };
 
 export const HERO = {
@@ -93,21 +92,11 @@ export const ESTATE_FLOW_HUB = {
 
 export const USE_ON_SALE = {
   title: 'Use it on your sale',
-  body: 'Your inventory, ready to print, share with your team or hand to a client.',
-  items: [
-    {
-      title: 'Excel inventory',
-      body: 'Every item with a thumbnail of your own photo. Sort, filter and edit.',
-    },
-    {
-      title: 'Inventory estimate PDF',
-      body: 'A clean printable report with photos, details and an estimated total.',
-    },
-    {
-      title: 'Share with your team',
-      body: 'Send the file to your crew or client. No account needed to open it.',
-    },
-  ],
+  body: 'Excel with photo thumbnails. Print it, share it with your team or hand it to a client.',
+  excel: 'Download Excel',
+  working: 'Building...',
+  importNote: `${ESTATE_FLOW_GLOBAL_NAME} imports this file as is.`,
+  importCta: `Bring it to ${ESTATE_FLOW_GLOBAL_NAME}`,
 };
 
 export const ESTATE_FLOW_BAND = {
@@ -129,12 +118,12 @@ export const FAQ = {
       a: "It lives in your browser's session storage for this tab only. It's sent to OpenAI and nowhere else. This page runs no analytics or third-party scripts, and the source is public so you can check.",
     },
     {
-      q: 'What does it cost?',
-      a: 'Nothing from us. OpenAI bills your account per request, usually pennies per hundred items. You see an estimate before every run.',
+      q: 'How do I get an OpenAI key?',
+      a: 'Sign in at platform.openai.com, add a payment method and a few dollars of credit, then create a key at platform.openai.com/api-keys and paste it here. It takes about 3 minutes, and the walkthrough video shows every step.',
     },
     {
-      q: 'Why is the price only an estimate?',
-      a: `AI sees the photo, not the market. Real pricing needs real market data. ${ESTATE_FLOW_GLOBAL_NAME} finds comps with Google Lens image search, and you can check eBay Sold listings in one tap.`,
+      q: 'What does it cost?',
+      a: 'Nothing from us. OpenAI bills your account per request, usually pennies per hundred items. You see an estimate before every run.',
     },
     {
       q: 'I have my Excel file. Now what?',
@@ -174,7 +163,7 @@ export const PHOTOS = {
   label: 'Item photos',
   dropTitle: 'Drop photos here, or choose files',
   dropActive: 'Drop to add',
-  dropHint: 'JPG, PNG or HEIC.',
+  dropHint: 'JPG, PNG or HEIC. Up to 1,000 photos per batch.',
   takePhotos: 'Take photos',
   addMore: 'Add more',
   clearAll: 'Clear all',
@@ -183,7 +172,11 @@ export const PHOTOS = {
   summary: (count: number) => `${count} ${count === 1 ? 'photo' : 'photos'} ready`,
   processing: (done: number, total: number) => `Preparing ${done} of ${total}`,
   skipped: (count: number) =>
-    `${count} ${count === 1 ? 'file was' : 'files were'} skipped (not a photo, too large, or over the limit).`,
+    `${count} ${count === 1 ? 'file was' : 'files were'} skipped (not a photo, too large, or over the 1,000 photo limit).`,
+  atLimit: "That's the 1,000 photo limit for one batch. Generate these, then start a new batch.",
+  showAll: (count: number) => `Show all ${count.toLocaleString('en-US')}`,
+  showLess: 'Show less',
+  more: (count: number) => `+${count.toLocaleString('en-US')} more`,
 };
 
 export const ESTIMATE = {
@@ -216,6 +209,10 @@ export const WIZARD = {
     invalid: "That key didn't work. Check it and try again.",
     unreachable: "Couldn't reach the provider. Check your connection and try again.",
     change: 'Change key',
+    saved: 'Your key is saved in this tab only.',
+    remove: 'Remove my key',
+    help: 'Need help?',
+    watch: 'Watch the full walkthrough',
   },
   model: {
     help: 'Cost per 100 items at your photo size.',
@@ -248,6 +245,8 @@ export const RESULTS = {
   queued: 'Waiting',
   failed: 'Failed',
   open: 'View details',
+  showMore: (shown: number, total: number) =>
+    `Show more (${shown.toLocaleString('en-US')} of ${total.toLocaleString('en-US')})`,
 };
 
 export const ITEM_DETAIL = {
@@ -281,6 +280,15 @@ export const ITEM_DETAIL = {
   confidence: (level: string) => `${level[0].toUpperCase()}${level.slice(1)} confidence`,
   shippingNote: 'Rough estimate. Get a real quote before you promise a price.',
   pickupOnly: 'Local pickup only',
-  upsell: `Want real comps? ${ESTATE_FLOW_GLOBAL_NAME} finds them with Google Lens image search.`,
-  upsellCta: `Try ${ESTATE_FLOW_GLOBAL_NAME}`,
+};
+
+export const DISCLAIMER = {
+  short: 'AI makes mistakes. Please review all prices and details before using them on your actual sale.',
+  title: 'Disclaimer',
+  points: [
+    'AI makes mistakes. Review every price, description and detail before you use it on your actual sale.',
+    'Values, dimensions and shipping costs are estimates from photos. They are not appraisals or sold data.',
+    'You use your own AI provider account and are responsible for its charges and terms.',
+    `This tool is provided as is, without warranty, under the MIT license. ${ESTATE_FLOW_GLOBAL_NAME} never receives your key, photos or listings.`,
+  ],
 };

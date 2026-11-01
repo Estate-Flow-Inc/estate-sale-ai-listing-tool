@@ -16,7 +16,7 @@ export interface Photo {
   name: string;
   originalSize: number;
   status: PhotoStatus;
-  /** Object URL of the compressed image, for thumbnails. */
+  /** Object URL of the small thumbnail. */
   previewUrl?: string;
   image?: PreparedImage;
 }
@@ -77,7 +77,7 @@ export const usePhotoStore = create<PhotoState>()((set, get) => {
           update(photo.id, {
             status: 'ready',
             image,
-            previewUrl: URL.createObjectURL(image.blob),
+            previewUrl: URL.createObjectURL(image.thumb),
           });
         } catch {
           if (isStillThere(photo.id)) update(photo.id, { status: 'error' });

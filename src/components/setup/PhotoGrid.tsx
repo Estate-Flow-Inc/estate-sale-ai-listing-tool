@@ -10,7 +10,7 @@ export function PhotoGrid({ photos, onRemove }: { photos: Photo[]; onRemove: (id
       {photos.map((photo) => (
         <li key={photo.id} className="group relative aspect-square overflow-hidden rounded-lg bg-[#e9e4db]">
           {photo.status === 'ready' && photo.previewUrl && (
-            <img src={photo.previewUrl} alt={photo.name} className="size-full object-cover" />
+            <img src={photo.previewUrl} alt={photo.name} loading="lazy" className="size-full object-cover" />
           )}
           {photo.status === 'processing' && (
             <span className="flex size-full items-center justify-center">

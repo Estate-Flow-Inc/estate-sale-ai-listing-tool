@@ -12,7 +12,14 @@ export function EstateFlowBand() {
         <p className="mb-4 text-[13px] font-medium tracking-wide text-[#c9b79c] uppercase">
           {ESTATE_FLOW_BAND.eyebrow}
         </p>
-        <h2 className="mb-5 font-serif text-4xl leading-tight text-balance">{ESTATE_FLOW_BAND.title}</h2>
+        <h2 className="mb-5 font-serif text-4xl leading-tight">
+          {/* One sentence per line, so the brand name never splits across lines. */}
+          {ESTATE_FLOW_BAND.title.split(/(?<=\.) /).map((sentence) => (
+            <span key={sentence} className="block">
+              {sentence}
+            </span>
+          ))}
+        </h2>
         {ESTATE_FLOW_BAND.paragraphs.map((p) => (
           <p key={p} className="mb-4 text-[17px] text-warm-bg/75">
             {p}

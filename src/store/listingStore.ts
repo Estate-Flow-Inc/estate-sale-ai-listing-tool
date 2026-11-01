@@ -4,6 +4,7 @@ import { GENERATION_CONCURRENCY } from '@/config/limits';
 import { getModel } from '@/config/models';
 import { getProvider, ProviderError, type Listing, type TokenUsage } from '@/providers';
 import { forEachWithConcurrency } from '@/utils/concurrency';
+import { blobToDataUrl } from '@/utils/imageCompression';
 import { withRetry } from '@/utils/retry';
 
 import type { Photo } from './photoStore';
@@ -13,8 +14,10 @@ export type ItemStatus = 'queued' | 'generating' | 'done' | 'error';
 export interface ListingItem {
   id: string;
   photoIds: string[];
-  /** Data URLs of the item's photos. Kept here so removing a photo doesn't break the listing. */
-  images: string[];
+  /** The item's compressed photos. Kept here so removing a photo doesn't break the listing. */
+  images: Blob[];
+  /** Object URL of the first photo's thumbnail, owned by this item. */
+  thumbUrl: string;
   status: ItemStatus;
   listing?: Listing;
   error?: string;
@@ -59,8 +62,10 @@ export const useListingStore = create<ListingState>()((set, get) => {
 
       update(id, { status: 'generating', error: undefined });
       try {
+        // Base64 only exists for the length of the request.
+        const images = await Promise.all(item.images.map(blobToDataUrl));
         const result = await withRetry(
-          () => provider.generateListing({ apiKey, modelId, images: item.images, signal }),
+          () => provider.generateListing({ apiKey, modelId, images, signal }),
           { signal }
         );
         update(id, { status: 'done', listing: result.listing, usage: result.usage });
@@ -94,7 +99,8 @@ export const useListingStore = create<ListingState>()((set, get) => {
         .map((p) => ({
           id: crypto.randomUUID(),
           photoIds: [p.id],
-          images: [p.image!.dataUrl],
+          images: [p.image!.blob],
+          thumbUrl: URL.createObjectURL(p.image!.thumb),
           status: 'queued',
         }));
       set((s) => ({ items: [...s.items, ...fresh] }));

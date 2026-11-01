@@ -5,7 +5,6 @@ import { Hero } from '@/components/landing/Hero';
 import { MiddlemanComparison } from '@/components/landing/MiddlemanComparison';
 import { SetupSection } from '@/components/landing/SetupSection';
 import { TrustPoints } from '@/components/landing/TrustPoints';
-import { UseOnYourSale } from '@/components/landing/UseOnYourSale';
 import { WalkthroughVideo } from '@/components/landing/WalkthroughVideo';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { ResultsSection } from '@/components/results/ResultsSection';
@@ -18,14 +17,13 @@ export function LandingPage() {
       <SiteHeader />
       <main>
         <Hero media={<WalkthroughVideo />} />
+        <TrustPoints />
         <SetupSection>
           <SetupCard />
         </SetupSection>
         <ResultsSection />
-        <TrustPoints />
         <MiddlemanComparison />
         <EstateFlowHub />
-        <UseOnYourSale />
         <EstateFlowBand />
         <Faq />
       </main>

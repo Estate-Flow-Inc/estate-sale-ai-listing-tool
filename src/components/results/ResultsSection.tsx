@@ -3,13 +3,15 @@ import { useState } from 'react';
 import { Container } from '@/components/common/Container';
 import { Button } from '@/components/ui/button';
 import { getModel } from '@/config/models';
-import { RESULTS } from '@/constants/copy';
+import { RESULTS_PAGE_SIZE } from '@/config/limits';
+import { DISCLAIMER, RESULTS } from '@/constants/copy';
 import { useSettings } from '@/hooks/useSettings';
 import { getApiKey } from '@/lib/apiKeyStorage';
 import { formatUsd } from '@/lib/format';
 import { useListingStore } from '@/store/listingStore';
 import { costFromUsage, estimateCost } from '@/utils/costEstimator';
 
+import { ExportPanel } from './ExportPanel';
 import { ItemCard } from './ItemCard';
 import { ItemDetail } from './ItemDetail';
 
@@ -18,6 +20,7 @@ export function ResultsSection() {
   const { items, running, modelId, retry } = useListingStore();
   const [settings] = useSettings();
   const [openId, setOpenId] = useState<string | null>(null);
+  const [shown, setShown] = useState(RESULTS_PAGE_SIZE);
 
   if (items.length === 0) return null;
 
@@ -54,11 +57,24 @@ export function ResultsSection() {
           )}
         </div>
 
+        <ExportPanel items={items} />
+        <p className="-mt-3 text-[13px] text-muted-foreground">{DISCLAIMER.short}</p>
+
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-          {items.map((item) => (
+          {items.slice(0, shown).map((item) => (
             <ItemCard key={item.id} item={item} onOpen={() => setOpenId(item.id)} />
           ))}
         </ul>
+        {items.length > shown && (
+          <Button
+            variant="outline"
+            size="xl"
+            className="self-center"
+            onClick={() => setShown((n) => n + RESULTS_PAGE_SIZE)}
+          >
+            {RESULTS.showMore(Math.min(shown, items.length), items.length)}
+          </Button>
+        )}
 
         <ItemDetail key={openId} item={items.find((i) => i.id === openId) ?? null} onClose={() => setOpenId(null)} />
       </Container>

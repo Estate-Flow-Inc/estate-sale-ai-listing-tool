@@ -2,7 +2,7 @@
 
 Turn item photos into estate sale listings. Free, open source, no account.
 
-Bring your own OpenAI key. Your photos go straight from your browser to OpenAI, with no middleman and no markup. Download an Excel inventory with photo thumbnails and a printable inventory estimate PDF.
+Bring your own OpenAI key. Your photos go straight from your browser to OpenAI, with no middleman and no markup. Download an Excel inventory with photo thumbnails.
 
 **Use it:** [tools.joinestateflow.com/ai-estate-sale-listing](https://tools.joinestateflow.com/ai-estate-sale-listing)
 
@@ -16,7 +16,7 @@ Built by [Estate Flow](https://joinestateflow.com).
 2. Pick a model and see the cost estimate
 3. Add item photos
 4. Review and edit titles, descriptions, categories, condition and prices
-5. Download Excel and PDF
+5. Download an Excel inventory
 
 ## Your key and photos
 
@@ -63,7 +63,7 @@ Open the URL Vite prints and paste your OpenAI key.
 
 - Vite, React, TypeScript
 - Tailwind CSS and shadcn/ui
-- ExcelJS (Excel with thumbnails), jsPDF (PDF)
+- ExcelJS (Excel with thumbnails)
 - Zustand (state), idb-keyval (IndexedDB)
 
 Everything runs in the browser. There is no backend.
@@ -74,7 +74,7 @@ Everything runs in the browser. There is no backend.
 src/
   components/   UI and screens
   providers/    AI providers (OpenAI today)
-  lib/          images, cost, Excel, PDF, storage
+  lib/          images, cost, storage
   store.ts      app state
 ```
 

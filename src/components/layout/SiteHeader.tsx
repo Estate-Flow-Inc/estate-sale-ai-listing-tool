@@ -2,8 +2,7 @@ import { Code } from 'lucide-react';
 
 import { Container } from '@/components/common/Container';
 import { ExternalLink } from '@/components/common/ExternalLink';
-import { buttonVariants } from '@/components/ui/button';
-import { ESTATE_FLOW_URL, GITHUB_REPO_URL } from '@/config/constants';
+import { GITHUB_REPO_URL } from '@/config/constants';
 import { NAV, TOOL_NAME } from '@/constants/copy';
 import { cn } from '@/lib/utils';
 
@@ -31,12 +30,6 @@ export function SiteHeader() {
           <ExternalLink href={GITHUB_REPO_URL} className={cn(navLink, 'inline-flex items-center gap-1.5')}>
             <Code className="size-4" aria-hidden="true" />
             {NAV.source}
-          </ExternalLink>
-          <ExternalLink
-            href={ESTATE_FLOW_URL}
-            className={cn(buttonVariants({ variant: 'outline', size: 'lg' }), 'ml-1 h-10 px-3.5')}
-          >
-            {NAV.tryEstateFlow}
           </ExternalLink>
         </nav>
       </Container>

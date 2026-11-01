@@ -3,9 +3,10 @@ import { useState } from 'react';
 
 import { ExternalLink } from '@/components/common/ExternalLink';
 import { Button } from '@/components/ui/button';
+import { WALKTHROUGH_YOUTUBE_URL } from '@/config/constants';
 import type { ProviderId } from '@/config/models';
 import { WIZARD } from '@/constants/copy';
-import { setApiKey } from '@/lib/apiKeyStorage';
+import { clearApiKey, setApiKey } from '@/lib/apiKeyStorage';
 import { cn } from '@/lib/utils';
 import { getProvider, PROVIDER_ORDER, PROVIDERS, ProviderError } from '@/providers';
 
@@ -80,9 +81,23 @@ export function KeyStep({
           <label htmlFor="api-key" className="text-sm font-medium">
             {provider.label} {WIZARD.key.label}
           </label>
-          <ExternalLink href={provider.keyUrl} className="text-[13px] text-accent-ink hover:underline">
-            {WIZARD.key.getKey}
-          </ExternalLink>
+          <span className="flex gap-3 text-[13px]">
+            {initialKey && key === initialKey && (
+              <button
+                type="button"
+                onClick={() => {
+                  clearApiKey(providerId);
+                  setKey('');
+                }}
+                className="text-muted-foreground hover:text-foreground hover:underline"
+              >
+                {WIZARD.key.remove}
+              </button>
+            )}
+            <ExternalLink href={provider.keyUrl} className="text-accent-ink hover:underline">
+              {WIZARD.key.getKey}
+            </ExternalLink>
+          </span>
         </div>
         <div className="flex gap-2">
           <input
@@ -110,6 +125,14 @@ export function KeyStep({
           <Lock className="mt-0.5 size-3.5 flex-none" aria-hidden="true" />
           {WIZARD.key.note}
         </p>
+        {WALKTHROUGH_YOUTUBE_URL && (
+          <p className="text-[13px] text-muted-foreground">
+            {WIZARD.key.help}{' '}
+            <ExternalLink href={WALKTHROUGH_YOUTUBE_URL} className="font-medium text-accent-ink hover:underline">
+              {WIZARD.key.watch}
+            </ExternalLink>
+          </p>
+        )}
       </div>
 
       <div className="flex justify-end">

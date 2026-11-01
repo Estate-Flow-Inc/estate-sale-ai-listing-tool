@@ -1,3 +1,4 @@
+import { DISPLAY_THUMB_PX } from '@/config/limits';
 import { IMAGE_QUALITY_PRESETS, type ImageQuality } from '@/config/settings';
 
 /**
@@ -7,11 +8,11 @@ import { IMAGE_QUALITY_PRESETS, type ImageQuality } from '@/config/settings';
  */
 
 export interface PreparedImage {
-  /** Compressed JPEG. */
+  /** Compressed JPEG sent to the AI. Kept as a Blob (not base64) to save memory. */
   blob: Blob;
+  /** Small JPEG for on-screen grids. */
+  thumb: Blob;
   fileName: string;
-  /** `data:image/jpeg;base64,...`, ready to send to an AI provider. */
-  dataUrl: string;
   width: number;
   height: number;
   originalSize: number;
@@ -105,11 +106,12 @@ export async function prepareImage(file: File, quality: ImageQuality): Promise<P
   const { maxDimension, jpegQuality } = IMAGE_QUALITY_PRESETS[quality];
   const source = mightBeHeic(file) ? await convertHeicToJpeg(file) : file;
   const { blob, width, height } = await drawToJpeg(source, maxDimension, jpegQuality, 'inside');
+  const { blob: thumb } = await drawToJpeg(blob, DISPLAY_THUMB_PX, 0.7, 'inside');
 
   return {
     blob,
+    thumb,
     fileName: `${source.name.replace(/\.[^.]+$/, '')}.jpg`,
-    dataUrl: await blobToDataUrl(blob),
     width,
     height,
     originalSize: file.size,
@@ -118,7 +120,7 @@ export async function prepareImage(file: File, quality: ImageQuality): Promise<P
 }
 
 /**
- * Small square JPEG thumbnail for Excel and PDF exports.
+ * Small square JPEG thumbnail for the Excel export.
  * 96px stays sharp in both while staying a few KB each. Never embed full photos.
  */
 export async function createThumbnail(image: Blob, size = 96, quality = 0.7): Promise<string> {

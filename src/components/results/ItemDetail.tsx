@@ -1,11 +1,9 @@
 import { CheckSquare, X } from 'lucide-react';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 
 import { CopyButton } from '@/components/common/CopyButton';
-import { ExternalLink } from '@/components/common/ExternalLink';
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { ESTATE_FLOW_URL } from '@/config/constants';
-import { ITEM_DETAIL } from '@/constants/copy';
+import { DISCLAIMER, ITEM_DETAIL } from '@/constants/copy';
 import { formatDimensions, formatUsdWhole } from '@/lib/format';
 import type { ListingItem } from '@/store/listingStore';
 
@@ -34,7 +32,16 @@ function Spec({ label, value }: { label: string; value: string | null }) {
 /** The full listing for one item: everything the AI found, ready to copy. */
 export function ItemDetail({ item, onClose }: { item: ListingItem | null; onClose: () => void }) {
   const [photoIndex, setPhotoIndex] = useState(0);
+  const [photoUrls, setPhotoUrls] = useState<string[]>([]);
   const l = item?.listing;
+
+  // Full-size photo URLs only while the detail is open.
+  useEffect(() => {
+    if (!item) return;
+    const urls = item.images.map((b) => URL.createObjectURL(b));
+    setPhotoUrls(urls);
+    return () => urls.forEach((u) => URL.revokeObjectURL(u));
+  }, [item]);
 
   const dims = l && formatDimensions(l.width_in, l.depth_in, l.height_in);
   const specs: [string, string | null][] = l
@@ -59,13 +66,13 @@ export function ItemDetail({ item, onClose }: { item: ListingItem | null; onClos
             {/* Photos */}
             <div className="flex flex-col gap-2 bg-warm-bg-alt p-4 md:sticky md:top-0 md:self-start">
               <img
-                src={item.images[photoIndex] ?? item.images[0]}
+                src={photoUrls[photoIndex] ?? item.thumbUrl}
                 alt={l.title}
                 className="aspect-square w-full rounded-lg bg-[#e9e4db] object-contain"
               />
               {item.images.length > 1 && (
                 <div className="flex gap-2">
-                  {item.images.map((src, i) => (
+                  {photoUrls.map((src, i) => (
                     <button
                       key={src}
                       type="button"
@@ -115,12 +122,7 @@ export function ItemDetail({ item, onClose }: { item: ListingItem | null; onClos
                   </span>
                 </div>
                 <p className="text-sm text-muted-foreground">{l.value_reasoning}</p>
-                <p className="text-xs text-muted-foreground">
-                  {ITEM_DETAIL.upsell}{' '}
-                  <ExternalLink href={ESTATE_FLOW_URL} className="font-medium text-accent-ink hover:underline">
-                    {ITEM_DETAIL.upsellCta}
-                  </ExternalLink>
-                </p>
+                <p className="text-xs text-muted-foreground">{DISCLAIMER.short}</p>
               </div>
 
               <Section

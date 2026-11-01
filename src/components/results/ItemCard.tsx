@@ -9,7 +9,7 @@ export function ItemCard({ item, onOpen }: { item: ListingItem; onOpen: () => vo
   const l = item.listing;
 
   return (
-    <li>
+    <li className="flex">
       <button
         type="button"
         onClick={onOpen}
@@ -17,8 +17,13 @@ export function ItemCard({ item, onOpen }: { item: ListingItem; onOpen: () => vo
         aria-label={l ? `${RESULTS.open}: ${l.title}` : undefined}
         className="group flex w-full flex-col overflow-hidden rounded-xl border border-border bg-card text-left transition-shadow enabled:hover:shadow-md focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-default"
       >
-        <span className="relative block aspect-square bg-[#e9e4db]">
-          <img src={item.images[0]} alt="" className="size-full object-cover" />
+        <span className="relative block aspect-[4/3] w-full overflow-hidden bg-[#e9e4db]">
+          <img
+            src={item.thumbUrl}
+            alt=""
+            loading="lazy"
+            className="absolute inset-0 size-full object-cover transition-transform duration-300 group-enabled:group-hover:scale-[1.03]"
+          />
           {item.status !== 'done' && (
             <span className="absolute inset-0 flex items-center justify-center bg-warm-bg/70 text-[13px] font-medium">
               {item.status === 'error' ? (
@@ -38,9 +43,9 @@ export function ItemCard({ item, onOpen }: { item: ListingItem; onOpen: () => vo
           )}
         </span>
         {l && (
-          <span className="flex flex-col gap-1.5 p-3">
-            <span className="line-clamp-2 text-sm font-medium">{l.title}</span>
-            <span className="flex items-center justify-between gap-2">
+          <span className="flex flex-1 flex-col gap-2 p-3">
+            <span className="line-clamp-2 min-h-10 text-sm leading-5 font-medium">{l.title}</span>
+            <span className="mt-auto flex items-center justify-between gap-2">
               <span className="font-mono text-[13px]">
                 {formatUsdWhole(l.resale_value_low)} to {formatUsdWhole(l.resale_value_high)}
               </span>

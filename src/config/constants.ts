@@ -12,3 +12,8 @@ export const OPENAI_API_KEYS_URL = 'https://platform.openai.com/api-keys';
 
 /** YouTube video ID for the walkthrough. Empty shows a placeholder. */
 export const WALKTHROUGH_YOUTUBE_ID = '';
+
+/** Full video on YouTube, for "Need help?" links. Empty until the ID is set. */
+export const WALKTHROUGH_YOUTUBE_URL = WALKTHROUGH_YOUTUBE_ID
+  ? `https://www.youtube.com/watch?v=${WALKTHROUGH_YOUTUBE_ID}`
+  : '';
