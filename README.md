@@ -4,7 +4,7 @@ Turn item photos into estate sale listings. Free, open source, no account.
 
 Bring your own OpenAI key. Your photos go straight from your browser to OpenAI, with no middleman and no markup. Download an Excel inventory with photo thumbnails.
 
-**Use it:** [joinestateflow.com/tools/ai-estate-sale-listing](https://joinestateflow.com/tools/ai-estate-sale-listing)
+**Use it:** [joinestateflow.com/tools/estate-sale-ai-listing-tool](https://joinestateflow.com/tools/estate-sale-ai-listing-tool)
 
 Built by [Estate Flow](https://joinestateflow.com/?utm_source=ai-listing-tool&utm_medium=referral&utm_campaign=free-tool&utm_content=readme).
 
@@ -42,8 +42,8 @@ For real pricing, [Estate Flow](https://joinestateflow.com/?utm_source=ai-listin
 Requires Node 20+ and Yarn.
 
 ```bash
-git clone https://github.com/Estate-Flow-Inc/ai-estate-sale-listing.git
-cd ai-estate-sale-listing
+git clone https://github.com/Estate-Flow-Inc/estate-sale-ai-listing-tool.git
+cd estate-sale-ai-listing-tool
 yarn
 yarn dev
 ```

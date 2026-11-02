@@ -12,7 +12,7 @@ export function renderPage() {
   return renderToString(<LandingPage />);
 }
 
-const SITE_URL = 'https://joinestateflow.com/tools/ai-estate-sale-listing';
+const SITE_URL = 'https://joinestateflow.com/tools/estate-sale-ai-listing-tool';
 
 /** Structured data, built from the same copy the page shows. */
 export function renderStructuredData() {

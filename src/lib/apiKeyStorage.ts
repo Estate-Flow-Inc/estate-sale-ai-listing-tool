@@ -1,7 +1,7 @@
 import type { ProviderId } from '@/config/models';
 
 /** API keys live in sessionStorage: this tab only, gone when it closes. */
-const storageKey = (provider: ProviderId) => `ai-estate-sale-listing:key:${provider}`;
+const storageKey = (provider: ProviderId) => `estate-sale-ai-listing-tool:key:${provider}`;
 
 export function getApiKey(provider: ProviderId): string {
   try {

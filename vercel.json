@@ -3,12 +3,12 @@
   "redirects": [
     {
       "source": "/",
-      "destination": "https://joinestateflow.com/tools/ai-estate-sale-listing",
+      "destination": "https://joinestateflow.com/tools/estate-sale-ai-listing-tool",
       "permanent": false
     }
   ],
   "rewrites": [
-    { "source": "/tools/ai-estate-sale-listing/:path*", "destination": "/:path*" }
+    { "source": "/tools/estate-sale-ai-listing-tool/:path*", "destination": "/:path*" }
   ],
   "headers": [
     {

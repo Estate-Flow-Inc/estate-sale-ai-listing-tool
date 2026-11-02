@@ -25,4 +25,4 @@ export const DEFAULT_SETTINGS: Settings = {
 };
 
 /** Bump the version if the Settings shape changes in a breaking way. */
-export const SETTINGS_STORAGE_KEY = 'ai-estate-sale-listing:settings:v1';
+export const SETTINGS_STORAGE_KEY = 'estate-sale-ai-listing-tool:settings:v1';

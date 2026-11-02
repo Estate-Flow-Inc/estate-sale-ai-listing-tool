@@ -21,7 +21,7 @@ export function estateFlowLink(placement: EstateFlowLinkPlacement, signup = fals
   return url.toString();
 }
 
-export const GITHUB_REPO_URL = 'https://github.com/Estate-Flow-Inc/ai-estate-sale-listing';
+export const GITHUB_REPO_URL = 'https://github.com/Estate-Flow-Inc/estate-sale-ai-listing-tool';
 
 export const OPENAI_API_KEYS_URL = 'https://platform.openai.com/api-keys';
 
