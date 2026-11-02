@@ -17,7 +17,7 @@ export const NAV = {
 };
 
 export const HERO = {
-  eyebrow: 'Free · Open source · No account',
+  eyebrow: 'Free AI estate sale listing tool · Open source',
   title: 'DIY AI listings. Pay for AI directly.',
   body: 'Upload item photos and get titles, descriptions, condition notes and estimated resale values. Use your own OpenAI key and pay OpenAI directly. No credits to buy. No markup.',
   cta: 'Try it now',
