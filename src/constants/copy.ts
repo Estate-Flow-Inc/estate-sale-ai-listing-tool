@@ -50,8 +50,8 @@ export const WALKTHROUGH = {
 
 export const TRUST_POINTS = [
   {
-    title: 'Your key stays in this tab',
-    body: "Stored in session storage, not on a server. Close the tab and it's gone.",
+    title: 'Your key stays on this page',
+    body: "Kept in your browser, not on a server. Leave, refresh or close the page and it's gone.",
   },
   {
     title: 'Photos go straight to OpenAI',
@@ -128,7 +128,7 @@ export const FAQ = {
   items: [
     {
       q: 'Is my API key safe?',
-      a: "It lives in your browser's session storage for this tab only. It's sent to OpenAI and nowhere else. This page runs no analytics or third-party scripts, and the source is public so you can check.",
+      a: "It's kept in your browser only while this page is open, and cleared when you leave, refresh or close it. It's sent to OpenAI and nowhere else. This page runs no analytics or third-party scripts, and the source is public so you can check.",
     },
     {
       q: 'How do I get an OpenAI key?',
@@ -218,12 +218,12 @@ export const WIZARD = {
     show: 'Show',
     hide: 'Hide',
     getKey: 'Get a key',
-    note: `Saved in this browser tab only and cleared when you close it. Sent only to your AI provider, never to ${ESTATE_FLOW_GLOBAL_NAME}.`,
+    note: `Kept only while this page is open. Cleared when you leave, refresh or close it. Sent only to your AI provider, never to ${ESTATE_FLOW_GLOBAL_NAME}.`,
     checking: 'Checking key...',
     invalid: "That key didn't work. Check it and try again.",
     unreachable: "Couldn't reach the provider. Check your connection and try again.",
     change: 'Change key',
-    saved: 'Your key is saved in this tab only.',
+    saved: 'Your key is kept only while this page is open.',
     remove: 'Remove my key',
     help: 'Need help?',
     watch: 'Watch the full walkthrough',

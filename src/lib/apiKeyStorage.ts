@@ -19,6 +19,14 @@ export function setApiKey(provider: ProviderId, key: string) {
   }
 }
 
+/**
+ * This tool shares joinestateflow.com's origin, so clear keys when the page is
+ * left or closed. Other pages on the domain never see them in this tab.
+ */
+export function clearKeysOnLeave(providers: ProviderId[]) {
+  window.addEventListener('pagehide', () => providers.forEach(clearApiKey));
+}
+
 export function clearApiKey(provider: ProviderId) {
   try {
     sessionStorage.removeItem(storageKey(provider));

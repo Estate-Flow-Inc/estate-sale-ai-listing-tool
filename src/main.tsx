@@ -2,6 +2,10 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
+import { PROVIDER_ORDER } from '@/providers'
+import { clearKeysOnLeave } from '@/lib/apiKeyStorage'
+
+clearKeysOnLeave(PROVIDER_ORDER.map((p) => p.id))
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

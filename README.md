@@ -4,7 +4,7 @@ Turn item photos into estate sale listings. Free, open source, no account.
 
 Bring your own OpenAI key. Your photos go straight from your browser to OpenAI, with no middleman and no markup. Download an Excel inventory with photo thumbnails.
 
-**Use it:** [tools.joinestateflow.com/ai-estate-sale-listing](https://tools.joinestateflow.com/ai-estate-sale-listing)
+**Use it:** [joinestateflow.com/tools/ai-estate-sale-listing](https://joinestateflow.com/tools/ai-estate-sale-listing)
 
 Built by [Estate Flow](https://joinestateflow.com/?utm_source=ai-listing-tool&utm_medium=referral&utm_campaign=free-tool&utm_content=readme).
 
@@ -20,7 +20,7 @@ Built by [Estate Flow](https://joinestateflow.com/?utm_source=ai-listing-tool&ut
 
 ## Your key and photos
 
-- Your API key is stored in this browser tab only (`sessionStorage`) and cleared when you close it.
+- Your API key is kept in `sessionStorage` only while the page is open, and cleared when you leave, refresh or close it.
 - Requests go directly from your browser to OpenAI. Nothing passes through Estate Flow.
 - No server, no login, no analytics on this page.
 - Your items are saved in your browser (IndexedDB) so a refresh doesn't lose your work.
