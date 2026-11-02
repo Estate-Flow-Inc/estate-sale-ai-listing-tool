@@ -8,7 +8,9 @@
     }
   ],
   "rewrites": [
-    { "source": "/tools/estate-sale-ai-listing-tool/:path*", "destination": "/:path*" }
+    { "source": "/tools/estate-sale-ai-listing-tool", "destination": "/index.html" },
+    { "source": "/tools/estate-sale-ai-listing-tool/", "destination": "/index.html" },
+    { "source": "/tools/estate-sale-ai-listing-tool/:path+", "destination": "/:path+" }
   ],
   "headers": [
     {

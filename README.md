@@ -68,15 +68,6 @@ Open the URL Vite prints and paste your OpenAI key.
 
 Everything runs in the browser. There is no backend.
 
-## Project structure
-
-```
-src/
-  components/   UI and screens
-  providers/    AI providers (OpenAI today)
-  lib/          images, cost, storage
-  store.ts      app state
-```
 
 ## Adding a provider
 
