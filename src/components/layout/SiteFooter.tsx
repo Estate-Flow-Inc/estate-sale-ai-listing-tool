@@ -1,6 +1,6 @@
 import { Container } from '@/components/common/Container';
 import { ExternalLink } from '@/components/common/ExternalLink';
-import { ESTATE_FLOW_URL, GITHUB_REPO_URL } from '@/config/constants';
+import { estateFlowLink, GITHUB_REPO_URL } from '@/config/constants';
 import { DISCLAIMER, ESTATE_FLOW_GLOBAL_NAME, FOOTER } from '@/constants/copy';
 
 export function SiteFooter() {
@@ -17,7 +17,7 @@ export function SiteFooter() {
       <Container className="flex flex-wrap justify-between gap-4 py-7 text-sm text-muted-foreground">
         <span>
           {FOOTER.builtBy}{' '}
-          <ExternalLink href={ESTATE_FLOW_URL} className="text-accent-ink hover:underline">
+          <ExternalLink href={estateFlowLink('footer')} className="text-accent-ink hover:underline">
             {ESTATE_FLOW_GLOBAL_NAME}
           </ExternalLink>
           . {FOOTER.license}
@@ -26,7 +26,7 @@ export function SiteFooter() {
           <ExternalLink href={GITHUB_REPO_URL} className="text-accent-ink hover:underline">
             {FOOTER.github}
           </ExternalLink>
-          <ExternalLink href={ESTATE_FLOW_URL} className="text-accent-ink hover:underline">
+          <ExternalLink href={estateFlowLink('footer')} className="text-accent-ink hover:underline">
             {ESTATE_FLOW_GLOBAL_NAME}
           </ExternalLink>
         </span>

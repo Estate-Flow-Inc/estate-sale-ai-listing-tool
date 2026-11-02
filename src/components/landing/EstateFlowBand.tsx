@@ -1,7 +1,7 @@
 import { Container } from '@/components/common/Container';
 import { ExternalLink } from '@/components/common/ExternalLink';
 import { buttonVariants } from '@/components/ui/button';
-import { ESTATE_FLOW_SIGNUP_URL } from '@/config/constants';
+import { estateFlowLink } from '@/config/constants';
 import { ESTATE_FLOW_BAND } from '@/constants/copy';
 
 /** Dark closing band: bring your Excel file into Estate Flow. */
@@ -25,7 +25,7 @@ export function EstateFlowBand() {
             {p}
           </p>
         ))}
-        <ExternalLink href={ESTATE_FLOW_SIGNUP_URL} className={buttonVariants({ size: 'xl', className: 'mt-5' })}>
+        <ExternalLink href={estateFlowLink('band_cta', true)} className={buttonVariants({ size: 'xl', className: 'mt-5' })}>
           {ESTATE_FLOW_BAND.cta}
         </ExternalLink>
         <span className="mt-4 text-sm text-warm-bg/60">{ESTATE_FLOW_BAND.note}</span>

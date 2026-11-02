@@ -28,7 +28,7 @@ function mightBeHeic(file: File) {
 
 /** HEIC/HEIF to JPEG. heic-to ships a current libheif; heic2any fails on newer iOS photos. */
 async function convertHeicToJpeg(file: File): Promise<File> {
-  const { isHeic, heicTo } = await import('heic-to');
+  const { isHeic, heicTo } = await import('heic-to/csp');
   if (!(await isHeic(file))) return file;
 
   const jpeg = await heicTo({ blob: file, type: 'image/jpeg', quality: 0.9 });

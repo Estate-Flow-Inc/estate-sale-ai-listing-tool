@@ -6,7 +6,7 @@ Bring your own OpenAI key. Your photos go straight from your browser to OpenAI, 
 
 **Use it:** [tools.joinestateflow.com/ai-estate-sale-listing](https://tools.joinestateflow.com/ai-estate-sale-listing)
 
-Built by [Estate Flow](https://joinestateflow.com).
+Built by [Estate Flow](https://joinestateflow.com/?utm_source=ai-listing-tool&utm_medium=referral&utm_campaign=free-tool&utm_content=readme).
 
 ---
 
@@ -33,7 +33,7 @@ You pay OpenAI directly at their published rates. With GPT-5.6 Luna, that's roug
 
 AI can describe an item from a photo. It can't see what that item actually sold for. Every price this tool gives is labeled as an estimate.
 
-For real pricing, [Estate Flow](https://joinestateflow.com) finds comps with Google Lens image search, with eBay Sold listings one tap away to verify. Estate Flow imports the Excel file this tool creates, so you can pick up where you left off.
+For real pricing, [Estate Flow](https://joinestateflow.com/?utm_source=ai-listing-tool&utm_medium=referral&utm_campaign=free-tool&utm_content=readme) finds comps with Google Lens image search, with eBay Sold listings one tap away to verify. Estate Flow imports the Excel file this tool creates, so you can pick up where you left off.
 
 ---
 
@@ -42,7 +42,7 @@ For real pricing, [Estate Flow](https://joinestateflow.com) finds comps with Goo
 Requires Node 20+ and Yarn.
 
 ```bash
-git clone https://github.com/[ORG]/ai-estate-sale-listing.git
+git clone https://github.com/Estate-Flow-Inc/ai-estate-sale-listing.git
 cd ai-estate-sale-listing
 yarn
 yarn dev

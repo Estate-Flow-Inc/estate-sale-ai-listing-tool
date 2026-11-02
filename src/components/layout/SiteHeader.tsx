@@ -6,6 +6,8 @@ import { GITHUB_REPO_URL } from '@/config/constants';
 import { NAV, TOOL_NAME } from '@/constants/copy';
 import { cn } from '@/lib/utils';
 
+import { HowItWorksDialog } from '@/components/landing/HowItWorksDialog';
+
 import { EstateFlowLogo } from './EstateFlowLogo';
 
 const navLink =
@@ -21,9 +23,7 @@ export function SiteHeader() {
           <span className="text-sm font-medium text-muted-foreground">{TOOL_NAME}</span>
         </div>
         <nav className="flex flex-wrap items-center gap-1">
-          <a href="#start" className={cn(navLink, 'hidden sm:inline-flex')}>
-            {NAV.tryItNow}
-          </a>
+          <HowItWorksDialog triggerClassName={cn(navLink, 'inline-flex cursor-pointer')} />
           <a href="#faq" className={cn(navLink, 'hidden sm:inline-flex')}>
             {NAV.faq}
           </a>

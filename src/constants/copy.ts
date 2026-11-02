@@ -12,7 +12,6 @@ export const ESTATE_FLOW_GLOBAL_NAME = 'Estate Flow';
 export const TOOL_NAME = 'AI Estate Sale Listing';
 
 export const NAV = {
-  tryItNow: 'Try it now',
   faq: 'FAQ',
   source: 'View source',
 };
@@ -21,7 +20,22 @@ export const HERO = {
   eyebrow: 'Free · Open source · No account',
   title: 'DIY AI listings. Pay for AI directly.',
   body: 'Upload item photos and get titles, descriptions, condition notes and estimated resale values. Use your own OpenAI key and pay OpenAI directly. No credits to buy. No markup.',
-  cta: 'Get started',
+  cta: 'Try it now',
+  getKey: 'Get my API key',
+};
+
+export const HOW_IT_WORKS = {
+  title: 'How it works',
+  steps: [
+    { title: 'Get your OpenAI API key', body: 'Takes about 3 minutes. You add a few dollars of credit to your own OpenAI account.' },
+    { title: 'Drop in your item photos', body: 'One photo per item, up to 1,000 per batch.' },
+    { title: 'Check the cost, then generate', body: 'You see the estimate before anything runs.' },
+    { title: 'Review and download Excel', body: `Print it, share it, or import it into ${ESTATE_FLOW_GLOBAL_NAME}.` },
+  ],
+  getKey: 'Get my API key',
+  watch: 'Play the video for the full walkthrough.',
+  start: 'Try it now',
+  close: 'Close',
 };
 
 export const SETUP_SECTION = {
@@ -32,7 +46,6 @@ export const SETUP_SECTION = {
 export const WALKTHROUGH = {
   caption: 'Watch the walkthrough: from API key to a printed inventory.',
   playLabel: 'Play walkthrough video',
-  placeholder: 'Walkthrough video coming soon',
 };
 
 export const TRUST_POINTS = [
@@ -180,7 +193,8 @@ export const PHOTOS = {
 };
 
 export const ESTIMATE = {
-  generate: (count: number) => `Generate ${count} ${count === 1 ? 'listing' : 'listings'}`,
+  generate: (count: number) =>
+    count === 0 ? 'Add photos to start' : `Generate ${count} ${count === 1 ? 'listing' : 'listings'}`,
   waiting: 'Preparing photos...',
   title: 'Before you run',
   yourCost: 'Your cost, using your own AI',

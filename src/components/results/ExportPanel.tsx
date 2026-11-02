@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { ExternalLink } from '@/components/common/ExternalLink';
 import { Button } from '@/components/ui/button';
-import { ESTATE_FLOW_SIGNUP_URL } from '@/config/constants';
+import { estateFlowLink } from '@/config/constants';
 import { USE_ON_SALE } from '@/constants/copy';
 import type { ListingItem } from '@/store/listingStore';
 import { downloadInventoryExcel } from '@/utils/exportExcel';
@@ -28,7 +28,7 @@ export function ExportPanel({ items }: { items: ListingItem[] }) {
         <p className="text-sm font-medium">{USE_ON_SALE.title}</p>
         <p className="text-xs text-muted-foreground">
           {USE_ON_SALE.body} {USE_ON_SALE.importNote}{' '}
-          <ExternalLink href={ESTATE_FLOW_SIGNUP_URL} className="font-medium text-accent-ink hover:underline">
+          <ExternalLink href={estateFlowLink('export_panel', true)} className="font-medium text-accent-ink hover:underline">
             {USE_ON_SALE.importCta}
           </ExternalLink>
         </p>

@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react';
 
 import { Container } from '@/components/common/Container';
+import { ExternalLink } from '@/components/common/ExternalLink';
 import { buttonVariants } from '@/components/ui/button';
+import { OPENAI_API_KEYS_URL } from '@/config/constants';
 import { HERO } from '@/constants/copy';
 
 /** Hero copy on the left, media (the walkthrough video) on the right. */
@@ -17,9 +19,14 @@ export function Hero({ media }: { media: ReactNode }) {
             {HERO.title}
           </h1>
           <p className="mb-9 max-w-[30em] text-lg text-muted-foreground text-pretty">{HERO.body}</p>
-          <a href="#start" className={buttonVariants({ size: 'xl' })}>
-            {HERO.cta}
-          </a>
+          <div className="flex flex-wrap gap-3">
+            <ExternalLink href={OPENAI_API_KEYS_URL} className={buttonVariants({ size: 'xl' })}>
+              {HERO.getKey}
+            </ExternalLink>
+            <a href="#start" className={buttonVariants({ variant: 'ghost', size: 'xl' })}>
+              {HERO.cta}
+            </a>
+          </div>
         </div>
         {media}
       </Container>

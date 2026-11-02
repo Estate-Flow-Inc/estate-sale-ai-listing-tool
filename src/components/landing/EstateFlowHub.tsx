@@ -14,7 +14,7 @@ import {
 import { Container } from '@/components/common/Container';
 import { ExternalLink } from '@/components/common/ExternalLink';
 import { buttonVariants } from '@/components/ui/button';
-import { ESTATE_FLOW_SIGNUP_URL } from '@/config/constants';
+import { estateFlowLink } from '@/config/constants';
 import { ESTATE_FLOW_HUB } from '@/constants/copy';
 
 /** Same order as ESTATE_FLOW_HUB.features. */
@@ -34,7 +34,7 @@ export function EstateFlowHub() {
             <p className="text-[17px] text-muted-foreground">{ESTATE_FLOW_HUB.theirs}</p>
             <p className="text-[17px] font-medium">{ESTATE_FLOW_HUB.ours}</p>
           </div>
-          <ExternalLink href={ESTATE_FLOW_SIGNUP_URL} className={buttonVariants({ size: 'xl' })}>
+          <ExternalLink href={estateFlowLink('hub_cta', true)} className={buttonVariants({ size: 'xl' })}>
             {ESTATE_FLOW_HUB.cta}
           </ExternalLink>
         </div>
