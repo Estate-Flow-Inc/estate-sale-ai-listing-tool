@@ -6,8 +6,7 @@ import { getSettings } from '@/lib/settings';
 import { getProvider, ProviderError, type Listing, type TokenUsage } from '@/providers';
 import { forEachWithConcurrency } from '@/utils/concurrency';
 import { blobToDataUrl } from '@/utils/imageCompression';
-import { startPacing, waitForSlot } from '@/utils/pacer';
-import { withRetry } from '@/utils/retry';
+import { sleep, startPacing, waitForSlot } from '@/utils/pacer';
 
 import type { Photo } from './photoStore';
 
@@ -66,14 +65,96 @@ let skuCounter = 0;
 const nextSku = () => `AI-${SKU_BATCH}-${String(++skuCounter).padStart(4, '0')}`;
 
 /**
- * Models that failed (overloaded, timed out, unavailable, or out of free quota)
- * are dropped for the rest of the session: index of the first model still in use.
+ * Model routing. Items alternate between models, and a failed item moves to the
+ * other model right away instead of waiting. A model that's overloaded or rate
+ * limited sits out briefly; one that's out of free quota or unavailable sits out
+ * for the rest of the session.
  */
-let firstHealthyModel = 0;
+const BENCH_MS = 60_000;
+/** Total tries per item, across all models. */
+const MAX_ATTEMPTS = 6;
+/** Longest wait when every model is benched, in seconds. */
+const MAX_WAIT = 30;
+
+const benchedUntil = new Map<string, number>();
+const droppedModels = new Set<string>();
+let nextStartModel = 0;
+
+const MODEL_IDS = MODELS.map((m) => m.id);
+
+/** First usable model, starting from `from`: prefers one that isn't benched. */
+function pickModel(from: number): string | null {
+  const order = MODEL_IDS.map((_, i) => MODEL_IDS[(from + i) % MODEL_IDS.length]).filter(
+    (id) => !droppedModels.has(id)
+  );
+  if (order.length === 0) return null;
+  const now = Date.now();
+  return (
+    order.find((id) => (benchedUntil.get(id) ?? 0) <= now) ??
+    order.reduce((a, b) => ((benchedUntil.get(a) ?? 0) <= (benchedUntil.get(b) ?? 0) ? a : b))
+  );
+}
+
+/** Kinds worth another try, on the other model if there is one. */
+const TRY_AGAIN = new Set(['server', 'rate_limit', 'network', 'bad_response']);
 
 export const useListingStore = create<ListingState>()((set, get) => {
   const update = (id: string, patch: Partial<ListingItem>) =>
     set((s) => ({ items: s.items.map((i) => (i.id === id ? { ...i, ...patch } : i)) }));
+
+  /** One item, routed across models until it succeeds or runs out of tries. */
+  const generate = async (
+    provider: ReturnType<typeof getProvider>,
+    apiKey: string,
+    images: string[],
+    signal: AbortSignal,
+    onBusy: () => void
+  ) => {
+    const { imageQuality } = getSettings();
+    let from = nextStartModel++ % MODEL_IDS.length;
+    let lastError: ProviderError | null = null;
+
+    for (let attempt = 0; attempt < MAX_ATTEMPTS; ) {
+      const modelId = pickModel(from);
+      if (!modelId) throw lastError ?? new ProviderError('unavailable', 'Google Gemini is unavailable right now.');
+
+      // Every model is sitting out: back off before trying anyway.
+      const benched = (benchedUntil.get(modelId) ?? 0) > Date.now();
+      if (benched) {
+        await sleep((Math.min(2 ** Math.max(attempt, 1), MAX_WAIT) + Math.random()) * 1000, signal);
+        if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
+      }
+
+      try {
+        await waitForSlot(modelId, signal);
+        const result = await provider.generateListing({ apiKey, modelId, images, imageQuality, signal });
+        return { ...result, modelId };
+      } catch (err) {
+        if (!(err instanceof ProviderError) || signal.aborted) throw err;
+        console.warn(`[listing] ${modelId} failed: ${err.kind}`, err.detail ?? err.message);
+        lastError = err;
+
+        if (err.kind === 'quota' || err.kind === 'unavailable') {
+          // Out of free quota today, or this model can't serve us: stop using it.
+          droppedModels.add(modelId);
+          continue;
+        }
+        if (!TRY_AGAIN.has(err.kind)) throw err; // auth, bad request: retrying won't help
+
+        attempt++;
+        if (err.kind === 'rate_limit' && !get().paced) {
+          startPacing();
+          set({ paced: true });
+        }
+        if (err.kind === 'server' || err.kind === 'rate_limit') {
+          benchedUntil.set(modelId, Date.now() + Math.max(BENCH_MS, (err.retryAfter ?? 0) * 1000));
+        }
+        onBusy();
+        from = MODEL_IDS.indexOf(modelId) + 1; // next try goes to the other model
+      }
+    }
+    throw lastError ?? new ProviderError('server', 'Google is seeing high demand. Try again in a few minutes.');
+  };
 
   const run = async (ids: string[], { apiKey, modelId }: RunConfig) => {
     if (ids.length === 0 || get().running) return;
@@ -81,9 +162,6 @@ export const useListingStore = create<ListingState>()((set, get) => {
     const { signal } = controller;
     const provider = getProvider(getModel(modelId).provider);
     set({ running: true, fatalError: null, dailyLimitHit: false, modelId });
-
-    // Fallback chain. The first time a model fails, move on and never use it again.
-    const chain = MODELS.map((m) => m.id);
 
     await forEachWithConcurrency(ids, GENERATION_CONCURRENCY, async (id) => {
       const item = get().items.find((i) => i.id === id);
@@ -93,51 +171,14 @@ export const useListingStore = create<ListingState>()((set, get) => {
       try {
         // Base64 only exists for the length of the request.
         const images = await Promise.all(item.images.map(blobToDataUrl));
-        const { imageQuality } = getSettings();
-        let done = false;
-        for (let k = firstHealthyModel; k < chain.length && !done; k++) {
-          const last = k === chain.length - 1;
-          try {
-            const result = await withRetry(
-              async () => {
-                await waitForSlot(signal);
-                return provider.generateListing({ apiKey, modelId: chain[k], images, imageQuality, signal });
-              },
-              // With a backup model left, no second chances. The last one gets a few retries.
-              {
-                signal,
-                serverRetries: last ? undefined : 0,
-                onRetry: (retryErr) => {
-                  update(id, { busy: true });
-                  // Free tier: drop to Google's per-minute pace for the rest of the session.
-                  if (retryErr.kind === 'rate_limit' && !get().paced) {
-                    startPacing();
-                    set({ paced: true });
-                  }
-                },
-              }
-            );
-            update(id, {
-              status: 'done',
-              busy: false,
-              listing: result.listing,
-              usage: result.usage,
-              modelId: chain[k],
-            });
-            done = true;
-          } catch (err) {
-            if (err instanceof ProviderError) {
-              console.warn(`[listing] ${chain[k]} failed: ${err.kind}`, err.detail ?? err.message);
-            }
-            const rotate =
-              !last &&
-              err instanceof ProviderError &&
-              (err.kind === 'server' || err.kind === 'unavailable' || err.kind === 'quota');
-            if (!rotate || signal.aborted) throw err;
-            firstHealthyModel = Math.max(firstHealthyModel, k + 1);
-            update(id, { busy: true });
-          }
-        }
+        const result = await generate(provider, apiKey, images, signal, () => update(id, { busy: true }));
+        update(id, {
+          status: 'done',
+          busy: false,
+          listing: result.listing,
+          usage: result.usage,
+          modelId: result.modelId,
+        });
       } catch (err) {
         if (signal.aborted) {
           update(id, { status: 'queued', busy: false });
@@ -145,6 +186,7 @@ export const useListingStore = create<ListingState>()((set, get) => {
         }
         const message = err instanceof Error ? err.message : 'Something went wrong';
         update(id, { status: 'error', busy: false, error: message });
+        // Bad key, or every model is out of free quota: every request would fail.
         if (err instanceof ProviderError && (err.kind === 'auth' || err.kind === 'quota')) {
           set({ fatalError: message, dailyLimitHit: err.kind === 'quota' });
           controller?.abort();

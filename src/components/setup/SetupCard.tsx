@@ -9,6 +9,7 @@ import { clearApiKey, getApiKey } from '@/lib/apiKeyStorage';
 import { unlistedPhotos, useListingStore } from '@/store/listingStore';
 import { usePhotoStore } from '@/store/photoStore';
 
+import { InlineKeyField } from './InlineKeyField';
 import { PhotoIntake } from './PhotoIntake';
 
 /** Photos first. Everything technical happens in the wizard modal. */
@@ -39,6 +40,7 @@ export function SetupCard() {
   return (
     <div className="flex flex-col gap-6 rounded-2xl border border-border bg-card p-5 sm:p-7">
       <PhotoIntake />
+      {!hasKey && <InlineKeyField providerId={providerId} onSaved={() => setHasKey(true)} />}
       <Button
         size="xl"
         disabled={pending.length === 0 || processing}

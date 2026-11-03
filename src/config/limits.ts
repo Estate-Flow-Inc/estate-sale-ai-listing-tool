@@ -15,8 +15,11 @@ export const PHOTO_GRID_PREVIEW = 12;
 /** Results shown per "Show more". */
 export const RESULTS_PAGE_SIZE = 48;
 
-/** Photos converted at once. Canvas work is heavy; more than this makes the page janky. */
-export const PHOTO_PROCESSING_CONCURRENCY = 3;
+/** Photos converted at once: one per spare CPU core, between 2 and 6, so the page stays smooth. */
+export const PHOTO_PROCESSING_CONCURRENCY = Math.min(
+  6,
+  Math.max(2, (globalThis.navigator?.hardwareConcurrency ?? 4) - 1)
+);
 
 /** What the file picker accepts. HEIC listed by extension because some browsers report no type. */
 export const ACCEPTED_IMAGE_TYPES = 'image/*,.heic,.heif';

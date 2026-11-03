@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { getModel } from '@/config/models';
+import { MODELS } from '@/config/models';
 import { ESTIMATE, WIZARD } from '@/constants/copy';
 import { formatUsd, formatUsdRange } from '@/lib/format';
 import type { CostEstimate } from '@/utils/costEstimator';
@@ -43,7 +43,7 @@ export function CostConfirm({
         </div>
       </dl>
       <p className="text-xs text-muted-foreground">
-        {ESTIMATE.footnote(getModel(modelId).label, formatUsd(estimate.low), formatUsd(estimate.high))}
+        {ESTIMATE.footnote(MODELS.map((m) => m.label).join(' and '), formatUsd(estimate.low), formatUsd(estimate.high))}
       </p>
       <div className="flex justify-end gap-2">
         <Button variant="outline" size="xl" onClick={onBack}>

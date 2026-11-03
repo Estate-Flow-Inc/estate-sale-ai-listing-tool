@@ -3,6 +3,7 @@ import { CircleAlert } from 'lucide-react';
 import { DailyLimitNotice } from '@/components/common/DailyLimitNotice';
 import { Button } from '@/components/ui/button';
 import { FREE_TIER_RPM } from '@/config/limits';
+import { MODELS } from '@/config/models';
 import { WIZARD } from '@/constants/copy';
 import { formatUsd } from '@/lib/format';
 import { useListingStore } from '@/store/listingStore';
@@ -52,7 +53,7 @@ export function RunStep({ onView, onFixKey }: { onView: () => void; onFixKey: ()
 
       {paced && running && (
         <p role="status" className="rounded-lg bg-muted px-3 py-2 text-[13px]">
-          {WIZARD.run.paced(Math.ceil((total - done - failed) / FREE_TIER_RPM))}
+          {WIZARD.run.paced(Math.ceil((total - done - failed) / (FREE_TIER_RPM * MODELS.length)))}
         </p>
       )}
       {busy && !paced && (

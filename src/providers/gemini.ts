@@ -34,9 +34,12 @@ async function request(url: string, init: RequestInit) {
   try {
     return await fetch(url, { ...init, signal });
   } catch (err) {
-    // Timed out: don't wait on this model again, move straight to the next one.
+    // Timed out with no response: treat like an overload so it's retried with backoff.
     if (timeout.aborted && !init.signal?.aborted) {
-      throw new ProviderError('unavailable', 'Google is seeing high demand. Try again in a few minutes.');
+      throw new ProviderError('server', 'Google is seeing high demand. Try again in a few minutes.', undefined, {
+        status: 0,
+        detail: `No response after ${REQUEST_TIMEOUT_MS / 1000}s (timed out)`,
+      });
     }
     if (err instanceof DOMException && err.name === 'AbortError') throw err;
     throw new ProviderError('network', "Couldn't reach Google Gemini");

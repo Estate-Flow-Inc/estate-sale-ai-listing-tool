@@ -1,8 +1,8 @@
 /**
- * Gemini models, in fallback order, with list prices per 1M tokens (USD).
- * One model on purpose: it's the only one that tested reliable. The fallback code
- * in store/listingStore.ts still works if more are ever added. If it stays overloaded (503) or unavailable, the
- * next item rotates to the next model automatically. Users never choose.
+ * Gemini models with list prices per 1M tokens (USD).
+ * Items alternate between them, and a failed item moves to the other model
+ * (see store/listingStore.ts). Each model has its own free daily and per-minute
+ * limits, so two models double the headroom. Users never choose.
  * Prices change: update PRICES_CHECKED_AT whenever you touch them.
  */
 
@@ -27,8 +27,7 @@ export const PRICES_CHECKED_AT = '2026-11-03';
 
 export const MODELS: ModelOption[] = [
   {
-    // Stable, fast, cheapest, and the most generous free daily allowance.
-    // In testing it was the only model that answered reliably.
+    // Stable, fast, cheapest, generous free daily allowance.
     id: 'gemini-3.1-flash-lite',
     provider: 'gemini',
     label: 'Gemini 3.1 Flash-Lite',
@@ -38,7 +37,17 @@ export const MODELS: ModelOption[] = [
     thinkingLevel: 'minimal',
     estThinkingTokens: 0,
   },
-  // Tested and dropped (Nov 2026): gemini-3.5-flash-lite (timeouts), gemini-3.8-flash (503 overloaded),
+  {
+    id: 'gemini-3.5-flash-lite',
+    provider: 'gemini',
+    label: 'Gemini 3.5 Flash-Lite',
+    inputPer1M: 0.3,
+    cachedInputPer1M: 0.03,
+    outputPer1M: 2.5,
+    thinkingLevel: 'minimal',
+    estThinkingTokens: 0,
+  },
+  // Tested and dropped (Nov 2026): gemini-3.8-flash (503 overloaded),
   // gemini-3.7-flash (429, tiny free allowance), gemini-3.6-flash (too slow).
   // gemini-3.5-flash costs more ($1.50 / $9.00). gemini-3.1-pro-preview: no free tier.
 ];

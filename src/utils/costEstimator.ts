@@ -27,17 +27,16 @@ export interface CostEstimate {
 /** Expected cost in USD of generating listings with a given model. */
 export function estimateCost({ modelId, itemCount, photoCount, imageQuality }: EstimateInput): CostEstimate {
   const model = getModel(modelId);
-  // The backup model may write some listings; the high end of the range covers
-  // the case where it writes all of them.
-  const start = Math.max(0, MODELS.findIndex((m) => m.id === modelId));
-  const priciest = MODELS.slice(start).reduce((a, b) => (b.outputPer1M > a.outputPer1M ? b : a));
+  // Items alternate between all models, so expect the average. The high end
+  // covers the priciest model writing every listing.
+  const priciest = MODELS.reduce((a, b) => (b.outputPer1M > a.outputPer1M ? b : a));
   const inputTokens =
     itemCount * TOKEN_ESTIMATES.promptTokens + photoCount * TOKEN_ESTIMATES.imageTokens[imageQuality];
 
   const priceAt = (m: typeof model) =>
     (inputTokens / 1_000_000) * m.inputPer1M +
     ((itemCount * (TOKEN_ESTIMATES.outputTokens + m.estThinkingTokens)) / 1_000_000) * m.outputPer1M;
-  const expected = priceAt(model);
+  const expected = MODELS.reduce((sum, m) => sum + priceAt(m), 0) / MODELS.length;
   const competitor = {
     low: itemCount * COMPETITOR_RATE_PER_ITEM.low,
     high: itemCount * COMPETITOR_RATE_PER_ITEM.high,

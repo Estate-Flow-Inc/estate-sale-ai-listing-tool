@@ -144,7 +144,11 @@ export const FAQ = {
     },
     {
       q: 'How many items can I do for free?',
-      a: "Google's free tier allows 500 listings a day, 15 a minute, on the model this tool uses. That covers most sales. For a bigger house or faster runs, turn on billing in Google AI Studio: the $5 minimum prepay covers about 2,000 items.",
+      a: "Google's free tier allows about 500 listings a day. That covers most sales. For a bigger house or faster runs, turn on billing in Google AI Studio: the $5 minimum prepay covers about 2,000 items.",
+    },
+    {
+      q: 'Why did some items fail?',
+      a: "The free tier runs on Google's shared pool, and when lots of people use it at once, Google turns some requests away. We retry automatically, so most items get through on their own. If a few still fail, click Retry failed. It only reruns the items that failed, and you can retry as often as you like. Busy periods hit paid users too, so turning on billing won't always help. Waiting a few minutes usually does.",
     },
     {
       q: 'Does Google see my photos?',
@@ -240,6 +244,8 @@ export const WIZARD = {
     freeTier: "Free keys work fine: Google allows about 500 listings a day. On the free tier, Google may use your photos to improve its AI. Turn on billing in Google AI Studio (a $5 minimum prepay) to opt out and lift the limit.",
     help: 'Need help?',
     watch: 'Watch the full walkthrough',
+    inlineLabel: 'Have a Gemini API key? Paste it here.',
+    save: 'Save key',
   },
   run: {
     progress: (done: number, total: number) => `${done} of ${total} done`,
@@ -248,7 +254,7 @@ export const WIZARD = {
     background: 'You can close this. Listings keep writing in the background.',
     busy: 'Google is seeing high demand. Retrying automatically.',
     paced: (minutesLeft: number) =>
-      `Google's free tier allows 15 listings a minute, so we're going at that pace. About ${minutesLeft} ${minutesLeft === 1 ? 'minute' : 'minutes'} left. Turn on billing in Google AI Studio for full speed.`,
+      `Google's free tier limits listings per minute, so we're going at that pace. About ${minutesLeft} ${minutesLeft === 1 ? 'minute' : 'minutes'} left. Turn on billing in Google AI Studio for full speed.`,
     stop: 'Stop',
     view: 'View listings',
     done: 'All done',
