@@ -7,13 +7,11 @@ import type { CostEstimate } from '@/utils/costEstimator';
 /** "Here's what this should cost. Continue?" shown before any API call. */
 export function CostConfirm({
   estimate,
-  modelId,
   itemCount,
   onConfirm,
   onBack,
 }: {
   estimate: CostEstimate;
-  modelId: string;
   itemCount: number;
   onConfirm: () => void;
   onBack: () => void;

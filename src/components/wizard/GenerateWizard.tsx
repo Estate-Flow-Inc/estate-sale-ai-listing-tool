@@ -92,7 +92,6 @@ export function GenerateWizard({
         {step === 'cost' && (
           <CostConfirm
             estimate={estimate}
-            modelId={settings.modelId}
             itemCount={photos.length}
             onBack={() => setStep('key')}
             onConfirm={confirm}
