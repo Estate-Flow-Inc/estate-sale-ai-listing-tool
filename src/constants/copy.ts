@@ -32,7 +32,7 @@ export const HOW_IT_WORKS = {
     { title: 'Get your free Gemini API key', body: 'Takes about a minute. Sign in to Google AI Studio with your Google account and copy the key it makes for you. No credit card needed.' },
     { title: 'Drop in your item photos', body: 'One photo per item, up to 500 per batch.' },
     { title: 'Check the cost, then generate', body: 'You see the estimate before anything runs.' },
-    { title: 'Review and download Excel', body: `Print it, share it, or import it into ${ESTATE_FLOW_GLOBAL_NAME}.` },
+    { title: 'Download your inventory', body: `Excel plus your photos in one .zip. Print it, share it, or import it into ${ESTATE_FLOW_GLOBAL_NAME}.` },
   ],
   getKey: 'Get my free API key',
   watch: 'Play the video for the full walkthrough.',
@@ -107,8 +107,8 @@ export const ESTATE_FLOW_HUB = {
 
 export const USE_ON_SALE = {
   title: 'Use it on your sale',
-  body: 'Excel with photo thumbnails. Print it, share it with your team or hand it to a client.',
-  excel: 'Download Excel',
+  body: 'A .zip with your Excel inventory and every photo, named by SKU. Print it, share it with your team or hand it to a client.',
+  excel: 'Download (.zip)',
   working: 'Building...',
   importNote: `${ESTATE_FLOW_GLOBAL_NAME} imports this file as is.`,
   importCta: `Bring it to ${ESTATE_FLOW_GLOBAL_NAME}`,
@@ -279,10 +279,7 @@ export const ITEM_DETAIL = {
     description: 'Description',
     details: 'Details',
     condition: 'Condition',
-    shipping: 'Shipping',
     notable: 'Worth noting',
-    verify: 'Check before you sell',
-    keywords: 'Keywords',
   },
   labels: {
     title: 'Title',
@@ -294,14 +291,12 @@ export const ITEM_DETAIL = {
     style: 'Style',
     era: 'Era',
     dimensions: 'Dimensions',
-    weight: 'Weight',
   },
   estimated: '(estimated)',
-  value: 'Estimated resale value',
+  price: 'Suggested price',
+  range: (low: string, high: string) => `Resale range ${low} to ${high}`,
   valueTag: 'AI estimate from photos, not sold data',
   confidence: (level: string) => `${level[0].toUpperCase()}${level.slice(1)} confidence`,
-  shippingNote: 'Rough estimate. Get a real quote before you promise a price.',
-  pickupOnly: 'Local pickup only',
 };
 
 export const DISCLAIMER = {
@@ -309,7 +304,7 @@ export const DISCLAIMER = {
   title: 'Disclaimer',
   points: [
     'AI makes mistakes. Review every price, description and detail before you use it on your actual sale.',
-    'Values, dimensions and shipping costs are estimates from photos. They are not appraisals or sold data.',
+    'Prices, values and dimensions are estimates from photos. They are not appraisals or sold data.',
     'You use your own AI provider account and are responsible for its charges and terms.',
     `This tool is provided as is, without warranty, under the MIT license. ${ESTATE_FLOW_GLOBAL_NAME} never receives your key, photos or listings.`,
   ],

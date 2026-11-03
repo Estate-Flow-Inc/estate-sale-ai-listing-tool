@@ -8,7 +8,7 @@ export const TOKEN_ESTIMATES = {
   /** System prompt (constants/prompts.ts) plus the output schema, per request. */
   promptTokens: 1500,
   /** One full listing as JSON (providers/listingSchema.ts). */
-  outputTokens: 900,
+  outputTokens: 650,
   /**
    * Per photo. Gemini bills a fixed amount by media resolution, not pixels:
    * medium = 560, high = 1,120 (see providers/gemini.ts MEDIA_RESOLUTION).

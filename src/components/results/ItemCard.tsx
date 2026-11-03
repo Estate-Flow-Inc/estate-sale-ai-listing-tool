@@ -46,9 +46,7 @@ export function ItemCard({ item, onOpen }: { item: ListingItem; onOpen: () => vo
           <span className="flex flex-1 flex-col gap-2 p-3">
             <span className="line-clamp-2 min-h-10 text-sm leading-5 font-medium">{l.title}</span>
             <span className="mt-auto flex items-center justify-between gap-2">
-              <span className="font-mono text-[13px]">
-                {formatUsdWhole(l.resale_value_low)} to {formatUsdWhole(l.resale_value_high)}
-              </span>
+              <span className="font-mono text-[15px]">{formatUsdWhole(l.suggested_price)}</span>
               <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium">{l.condition}</span>
             </span>
           </span>

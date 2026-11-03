@@ -2,7 +2,7 @@
 
 Turn item photos into estate sale listings. Free, open source, no account.
 
-Bring your own Google Gemini key. Your photos go straight from your browser to Google, with no middleman and no markup. Download an Excel inventory with photo thumbnails.
+Bring your own Google Gemini key. Your photos go straight from your browser to Google, with no middleman and no markup. Download a .zip with an Excel inventory and your photos, named by SKU.
 
 **Use it:** [joinestateflow.com/tools/estate-sale-ai-listing-tool](https://joinestateflow.com/tools/estate-sale-ai-listing-tool)
 
@@ -16,7 +16,7 @@ Built by [Estate Flow](https://joinestateflow.com/?utm_source=ai-listing-tool&ut
 2. Pick a model and see the cost estimate
 3. Add item photos
 4. Review and edit titles, descriptions, categories, condition and prices
-5. Download an Excel inventory
+5. Download your inventory (.zip: Excel plus photos)
 
 ## Your key and photos
 
@@ -64,7 +64,7 @@ Open the URL Vite prints and paste your Gemini key.
 
 - Vite, React, TypeScript
 - Tailwind CSS and shadcn/ui
-- ExcelJS (Excel with thumbnails)
+- ExcelJS (Excel with thumbnails), fflate (zip)
 - Zustand (state), idb-keyval (IndexedDB)
 
 Everything runs in the browser. There is no backend.

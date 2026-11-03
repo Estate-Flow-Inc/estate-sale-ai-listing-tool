@@ -1,4 +1,4 @@
-import { CheckSquare, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useEffect, useState, type ReactNode } from 'react';
 
 import { CopyButton } from '@/components/common/CopyButton';
@@ -54,7 +54,6 @@ export function ItemDetail({ item, onClose }: { item: ListingItem | null; onClos
         [ITEM_DETAIL.labels.style, l.style],
         [ITEM_DETAIL.labels.era, l.era],
         [ITEM_DETAIL.labels.dimensions, dims ? `${dims} ${l.dimensions_estimated ? ITEM_DETAIL.estimated : ''}` : null],
-        [ITEM_DETAIL.labels.weight, l.weight_lb ? `~${Math.round(l.weight_lb)} lb` : null],
       ]
     : [];
 
@@ -92,7 +91,9 @@ export function ItemDetail({ item, onClose }: { item: ListingItem | null; onClos
             <div className="flex flex-col gap-5 p-6">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-xs text-muted-foreground">{l.category}</span>
+                  <span className="text-xs text-muted-foreground">
+                    <span className="font-mono">{item.sku}</span> · {l.category}
+                  </span>
                   <DialogTitle className="font-serif text-2xl leading-tight">{l.title}</DialogTitle>
                 </div>
                 <div className="flex flex-none items-center">
@@ -109,9 +110,10 @@ export function ItemDetail({ item, onClose }: { item: ListingItem | null; onClos
 
               {/* Value */}
               <div className="flex flex-col gap-2 rounded-xl bg-[#faf7f2] p-4">
-                <span className="text-xs text-muted-foreground">{ITEM_DETAIL.value}</span>
-                <span className="font-mono text-2xl">
-                  {formatUsdWhole(l.resale_value_low)} to {formatUsdWhole(l.resale_value_high)}
+                <span className="text-xs text-muted-foreground">{ITEM_DETAIL.price}</span>
+                <span className="font-mono text-3xl">{formatUsdWhole(l.suggested_price)}</span>
+                <span className="text-sm text-muted-foreground">
+                  {ITEM_DETAIL.range(formatUsdWhole(l.resale_value_low), formatUsdWhole(l.resale_value_high))}
                 </span>
                 <div className="flex flex-wrap gap-2">
                   <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-accent-ink">
@@ -149,18 +151,6 @@ export function ItemDetail({ item, onClose }: { item: ListingItem | null; onClos
                 </div>
               </Section>
 
-              <Section title={ITEM_DETAIL.sections.shipping}>
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <span className="text-sm font-medium">{l.shipping_method}</span>
-                  <span className="font-mono text-sm">
-                    {l.shipping_cost_low != null && l.shipping_cost_high != null
-                      ? `${formatUsdWhole(l.shipping_cost_low)} to ${formatUsdWhole(l.shipping_cost_high)}`
-                      : ITEM_DETAIL.pickupOnly}
-                  </span>
-                </div>
-                {l.package_notes && <p className="text-sm text-muted-foreground">{l.package_notes}</p>}
-                <p className="text-xs text-muted-foreground">{ITEM_DETAIL.shippingNote}</p>
-              </Section>
 
               {l.notable_details.length > 0 && (
                 <Section title={ITEM_DETAIL.sections.notable}>
@@ -172,33 +162,7 @@ export function ItemDetail({ item, onClose }: { item: ListingItem | null; onClos
                 </Section>
               )}
 
-              {l.verify_before_selling.length > 0 && (
-                <Section title={ITEM_DETAIL.sections.verify}>
-                  <ul className="space-y-1.5 text-sm">
-                    {l.verify_before_selling.map((v) => (
-                      <li key={v} className="flex items-start gap-2">
-                        <CheckSquare className="mt-0.5 size-4 flex-none text-accent-ink" aria-hidden="true" />
-                        {v}
-                      </li>
-                    ))}
-                  </ul>
-                </Section>
-              )}
 
-              {l.keywords.length > 0 && (
-                <Section
-                  title={ITEM_DETAIL.sections.keywords}
-                  action={<CopyButton text={l.keywords.join(', ')} label={ITEM_DETAIL.sections.keywords} />}
-                >
-                  <div className="flex flex-wrap gap-1.5">
-                    {l.keywords.map((k) => (
-                      <span key={k} className="rounded-full bg-muted px-2.5 py-1 text-xs">
-                        {k}
-                      </span>
-                    ))}
-                  </div>
-                </Section>
-              )}
             </div>
           </div>
         )}

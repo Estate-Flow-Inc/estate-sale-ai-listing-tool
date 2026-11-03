@@ -15,6 +15,8 @@ export type ItemStatus = 'queued' | 'generating' | 'done' | 'error';
 
 export interface ListingItem {
   id: string;
+  /** AI-<batch>-0001: unique per page session, used in the Excel file and photo names. */
+  sku: string;
   photoIds: string[];
   /** The item's compressed photos. Kept here so removing a photo doesn't break the listing. */
   images: Blob[];
@@ -54,6 +56,14 @@ interface ListingState {
 }
 
 let controller: AbortController | null = null;
+
+/**
+ * SKUs: a short random code per page session, so two batches imported into the
+ * same Estate Flow sale never collide (its importer skips duplicate SKUs).
+ */
+const SKU_BATCH = Math.random().toString(36).slice(2, 5).toUpperCase();
+let skuCounter = 0;
+const nextSku = () => `AI-${SKU_BATCH}-${String(++skuCounter).padStart(4, '0')}`;
 
 /**
  * Models that failed (overloaded, timed out, unavailable, or out of free quota)
@@ -159,6 +169,7 @@ export const useListingStore = create<ListingState>()((set, get) => {
         .filter((p) => p.status === 'ready' && p.image && !listed.has(p.id))
         .map((p) => ({
           id: crypto.randomUUID(),
+          sku: nextSku(),
           photoIds: [p.id],
           images: [p.image!.blob],
           thumbUrl: URL.createObjectURL(p.image!.thumb),

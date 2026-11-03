@@ -6,114 +6,92 @@ import { formatDimensions } from '@/lib/format';
 import { createThumbnail } from './imageCompression';
 
 /**
- * Excel inventory with photo thumbnails.
+ * Inventory download: a .zip with inventory.xlsx and photos/<SKU>.jpg.
  *
- * The first columns match Estate Flow's inventory import exactly (headers are
- * matched by name): SKU, Title, Description, Price, Notes. Don't rename them.
- * Everything else rides along in extra columns the importer ignores.
+ * The first Excel columns match Estate Flow's inventory import exactly (headers
+ * are matched by name): SKU, Title, Description, Price, Notes. Don't rename them.
+ * Photos are named by SKU so they can always be matched to their row.
  * Thumbnail pattern from estate-flow/web utils/inventorySheetExport.ts.
  */
 
 const THUMB_PX = 62;
 
+type DoneItem = ListingItem & { listing: Listing };
+
 interface Column {
   header: string;
   width: number;
-  value: (l: Listing) => string | number | boolean | null;
+  value: (item: DoneItem) => string | number | null;
   money?: boolean;
   wrap?: boolean;
 }
 
-const joinList = (list: string[]) => list.join('; ');
-
-/** Whole-dollar midpoint of the AI range. The importer requires a price. */
-const suggestedPrice = (l: Listing) => Math.round((l.resale_value_low + l.resale_value_high) / 2);
-
+/** Everything that doesn't need its own column, as short readable lines. */
 function notesFor(l: Listing) {
   const dims = formatDimensions(l.width_in, l.depth_in, l.height_in);
+  const makeModel = [l.make, l.model].filter(Boolean).join(' ');
+  const styleEra = [l.style, l.era].filter(Boolean).join(', ');
   return [
     `Condition: ${l.condition}. ${l.condition_notes}`,
     dims && `Size: ${dims}${l.dimensions_estimated ? ' (estimated)' : ''}`,
-    `AI estimate $${l.resale_value_low} to $${l.resale_value_high} from photos, not sold data.`,
+    makeModel && `Make/model: ${makeModel}`,
+    styleEra && `Style: ${styleEra}`,
+    l.notable_details.length > 0 && `Worth noting: ${l.notable_details.join('; ')}`,
+    `AI price from photos (range $${l.resale_value_low} to $${l.resale_value_high}). Review before your sale.`,
   ]
     .filter(Boolean)
     .join('\n');
 }
 
+/** "Furniture > Sideboards" to "Furniture, Sideboards": one comma-separated tags column. */
+const categoryTags = (category: string) =>
+  category
+    .split(/\s*[>›/]\s*/)
+    .map((t) => t.trim())
+    .filter(Boolean)
+    .join(', ');
+
 const COLUMNS: Column[] = [
   // Estate Flow import columns. Keep these headers exact.
-  { header: 'SKU', width: 12, value: () => '' },
-  { header: 'Title', width: 36, value: (l) => l.title, wrap: true },
-  { header: 'Description', width: 50, value: (l) => l.description, wrap: true },
-  { header: 'Price', width: 10, value: suggestedPrice, money: true },
-  { header: 'Notes', width: 40, value: notesFor, wrap: true },
+  { header: 'SKU', width: 16, value: (i) => i.sku },
+  { header: 'Title', width: 36, value: (i) => i.listing.title, wrap: true },
+  { header: 'Description', width: 50, value: (i) => i.listing.description, wrap: true },
+  { header: 'Price', width: 10, value: (i) => i.listing.suggested_price, money: true },
+  { header: 'Notes', width: 50, value: (i) => notesFor(i.listing), wrap: true },
   // Extra detail.
-  { header: 'Category', width: 24, value: (l) => l.category },
-  { header: 'Condition', width: 12, value: (l) => l.condition },
-  { header: 'Condition details', width: 36, value: (l) => l.condition_notes, wrap: true },
-  { header: 'Brand', width: 16, value: (l) => l.brand },
-  { header: 'Make', width: 16, value: (l) => l.make },
-  { header: 'Model', width: 18, value: (l) => l.model },
-  { header: 'Color', width: 16, value: (l) => l.color },
-  { header: 'Materials', width: 20, value: (l) => joinList(l.materials) },
-  { header: 'Style', width: 18, value: (l) => l.style },
-  { header: 'Era', width: 10, value: (l) => l.era },
-  { header: 'Width (in)', width: 10, value: (l) => l.width_in },
-  { header: 'Depth (in)', width: 10, value: (l) => l.depth_in },
-  { header: 'Height (in)', width: 10, value: (l) => l.height_in },
-  { header: 'Size estimated', width: 12, value: (l) => (l.dimensions_estimated ? 'Yes' : 'No') },
-  { header: 'Weight (lb)', width: 11, value: (l) => l.weight_lb },
-  { header: 'AI value low', width: 12, value: (l) => l.resale_value_low, money: true },
-  { header: 'AI value high', width: 12, value: (l) => l.resale_value_high, money: true },
-  { header: 'Value confidence', width: 14, value: (l) => l.value_confidence },
-  { header: 'Value reasoning', width: 40, value: (l) => l.value_reasoning, wrap: true },
-  { header: 'Shipping method', width: 18, value: (l) => l.shipping_method },
-  { header: 'Shipping low', width: 12, value: (l) => l.shipping_cost_low, money: true },
-  { header: 'Shipping high', width: 12, value: (l) => l.shipping_cost_high, money: true },
-  { header: 'Packing', width: 36, value: (l) => l.package_notes, wrap: true },
-  { header: 'Worth noting', width: 36, value: (l) => joinList(l.notable_details), wrap: true },
-  { header: 'Check before selling', width: 40, value: (l) => joinList(l.verify_before_selling), wrap: true },
-  { header: 'Keywords', width: 36, value: (l) => l.keywords.join(', '), wrap: true },
+  { header: 'Category', width: 26, value: (i) => categoryTags(i.listing.category) },
+  { header: 'Condition', width: 12, value: (i) => i.listing.condition },
+  { header: 'Brand', width: 16, value: (i) => i.listing.brand },
+  { header: 'Color', width: 16, value: (i) => i.listing.color },
+  { header: 'Materials', width: 20, value: (i) => i.listing.materials.join(', ') },
+  { header: 'AI value low', width: 12, value: (i) => i.listing.resale_value_low, money: true },
+  { header: 'AI value high', width: 12, value: (i) => i.listing.resale_value_high, money: true },
+  { header: 'Value confidence', width: 14, value: (i) => i.listing.value_confidence },
+  { header: 'Value reasoning', width: 40, value: (i) => i.listing.value_reasoning, wrap: true },
+  { header: 'Photo file', width: 20, value: (i) => photoName(i.sku, 0) },
+  { header: 'AI model', width: 22, value: (i) => (i.modelId ? getModel(i.modelId).label : null) },
 ];
 
-function download(buffer: BlobPart, filename: string) {
-  const blob = new Blob([buffer], {
-    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
+/** photos/AI-K7Q-0001.jpg, then AI-K7Q-0001-2.jpg for extra photos of the same item. */
+function photoName(sku: string, index: number) {
+  return index === 0 ? `${sku}.jpg` : `${sku}-${index + 1}.jpg`;
 }
 
-/** Build and download the inventory workbook for every finished listing. */
-export async function downloadInventoryExcel(items: ListingItem[]) {
-  const done = items.filter((i): i is ListingItem & { listing: Listing } => Boolean(i.listing));
-  if (done.length === 0) return;
-
+async function buildWorkbook(done: DoneItem[]) {
   const ExcelJS = (await import('exceljs')).default;
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet('Inventory', { views: [{ state: 'frozen', ySplit: 1, xSplit: 1 }] });
 
   // Column A holds the thumbnail; the importer ignores it (no matching header).
-  sheet.addRow(['Photo', ...COLUMNS.map((c) => c.header), 'AI model']);
+  sheet.addRow(['Photo', ...COLUMNS.map((c) => c.header)]);
   sheet.getRow(1).font = { bold: true };
   sheet.getColumn(1).width = 11;
   COLUMNS.forEach((c, i) => {
     sheet.getColumn(i + 2).width = c.width;
   });
-  sheet.getColumn(COLUMNS.length + 2).width = 22;
 
   for (const item of done) {
-    sheet.addRow([
-      '',
-      ...COLUMNS.map((c) => c.value(item.listing) ?? ''),
-      item.modelId ? getModel(item.modelId).label : '',
-    ]);
+    sheet.addRow(['', ...COLUMNS.map((c) => c.value(item) ?? '')]);
     const rowIndex = sheet.rowCount;
     const row = sheet.getRow(rowIndex);
     row.height = THUMB_PX * 0.75;
@@ -135,6 +113,38 @@ export async function downloadInventoryExcel(items: ListingItem[]) {
     }
   }
 
-  const buffer = await workbook.xlsx.writeBuffer();
-  download(buffer, `estate-sale-inventory-${new Date().toISOString().slice(0, 10)}.xlsx`);
+  return new Uint8Array(await workbook.xlsx.writeBuffer());
+}
+
+function download(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+/** Build and download inventory.xlsx plus every photo, named by SKU, as one .zip. */
+export async function downloadInventoryZip(items: ListingItem[]) {
+  const done = items.filter((i): i is DoneItem => Boolean(i.listing));
+  if (done.length === 0) return;
+
+  const [{ zip }, workbook] = await Promise.all([import('fflate'), buildWorkbook(done)]);
+
+  // Photos are already compressed JPEGs, so store them without recompressing (level 0).
+  const files: Record<string, Uint8Array | [Uint8Array, { level: 0 }]> = { 'inventory.xlsx': workbook };
+  for (const item of done) {
+    for (const [index, blob] of item.images.entries()) {
+      files[`photos/${photoName(item.sku, index)}`] = [new Uint8Array(await blob.arrayBuffer()), { level: 0 }];
+    }
+  }
+
+  const zipped = await new Promise<Uint8Array>((resolve, reject) =>
+    zip(files, (err, data) => (err ? reject(err) : resolve(data)))
+  );
+  const date = new Date().toISOString().slice(0, 10);
+  download(new Blob([zipped as BlobPart], { type: 'application/zip' }), `estate-sale-inventory-${date}.zip`);
 }

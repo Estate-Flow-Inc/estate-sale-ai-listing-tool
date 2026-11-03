@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { estateFlowLink } from '@/config/constants';
 import { USE_ON_SALE } from '@/constants/copy';
 import type { ListingItem } from '@/store/listingStore';
-import { downloadInventoryExcel } from '@/utils/exportExcel';
+import { downloadInventoryZip } from '@/utils/exportExcel';
 
 /** Slim download bar above the results. */
 export function ExportPanel({ items }: { items: ListingItem[] }) {
@@ -16,7 +16,7 @@ export function ExportPanel({ items }: { items: ListingItem[] }) {
   const exportExcel = async () => {
     setBusy(true);
     try {
-      await downloadInventoryExcel(items);
+      await downloadInventoryZip(items);
     } finally {
       setBusy(false);
     }
