@@ -1,6 +1,7 @@
 import type { Listing } from '@/providers';
 import type { ListingItem } from '@/store/listingStore';
 
+import { getModel } from '@/config/models';
 import { formatDimensions } from '@/lib/format';
 import { createThumbnail } from './imageCompression';
 
@@ -99,15 +100,20 @@ export async function downloadInventoryExcel(items: ListingItem[]) {
   const sheet = workbook.addWorksheet('Inventory', { views: [{ state: 'frozen', ySplit: 1, xSplit: 1 }] });
 
   // Column A holds the thumbnail; the importer ignores it (no matching header).
-  sheet.addRow(['Photo', ...COLUMNS.map((c) => c.header)]);
+  sheet.addRow(['Photo', ...COLUMNS.map((c) => c.header), 'AI model']);
   sheet.getRow(1).font = { bold: true };
   sheet.getColumn(1).width = 11;
   COLUMNS.forEach((c, i) => {
     sheet.getColumn(i + 2).width = c.width;
   });
+  sheet.getColumn(COLUMNS.length + 2).width = 22;
 
   for (const item of done) {
-    sheet.addRow(['', ...COLUMNS.map((c) => c.value(item.listing) ?? '')]);
+    sheet.addRow([
+      '',
+      ...COLUMNS.map((c) => c.value(item.listing) ?? ''),
+      item.modelId ? getModel(item.modelId).label : '',
+    ]);
     const rowIndex = sheet.rowCount;
     const row = sheet.getRow(rowIndex);
     row.height = THUMB_PX * 0.75;

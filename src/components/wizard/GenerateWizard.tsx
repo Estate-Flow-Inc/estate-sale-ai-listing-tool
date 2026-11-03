@@ -13,13 +13,12 @@ import type { Photo } from '@/store/photoStore';
 import { estimateCost } from '@/utils/costEstimator';
 
 import { KeyStep } from './KeyStep';
-import { ModelStep } from './ModelStep';
 import { RunStep } from './RunStep';
 
-type Step = 'key' | 'model' | 'cost' | 'run';
-const PROGRESS_STEPS: Step[] = ['key', 'model', 'cost'];
+type Step = 'key' | 'cost' | 'run';
+const PROGRESS_STEPS: Step[] = ['key', 'cost'];
 
-/** Multi-step modal: connect AI, pick model, confirm cost, watch it run. */
+/** Multi-step modal: connect AI, confirm cost, watch it run. */
 export function GenerateWizard({
   open,
   onOpenChange,
@@ -37,7 +36,7 @@ export function GenerateWizard({
   const start = useListingStore((s) => s.start);
 
   const [apiKey, setApiKey] = useState(() => getApiKey(providerId));
-  const [step, setStep] = useState<Step>(() => (apiKey ? 'model' : 'key'));
+  const [step, setStep] = useState<Step>(() => (apiKey ? 'cost' : 'key'));
 
   const estimate = estimateCost({
     modelId: settings.modelId,
@@ -67,7 +66,7 @@ export function GenerateWizard({
         </div>
 
         {step !== 'run' && (
-          <div className="mb-6 grid grid-cols-3 gap-1.5" aria-hidden="true">
+          <div className="mb-6 grid grid-cols-2 gap-1.5" aria-hidden="true">
             {PROGRESS_STEPS.map((s, i) => (
               <span
                 key={s}
@@ -86,19 +85,16 @@ export function GenerateWizard({
             initialKey={apiKey}
             onDone={(key) => {
               setApiKey(key);
-              setStep('model');
+              setStep('cost');
             }}
           />
-        )}
-        {step === 'model' && (
-          <ModelStep providerId={providerId} onBack={() => setStep('key')} onNext={() => setStep('cost')} />
         )}
         {step === 'cost' && (
           <CostConfirm
             estimate={estimate}
             modelId={settings.modelId}
             itemCount={photos.length}
-            onBack={() => setStep('model')}
+            onBack={() => setStep('key')}
             onConfirm={confirm}
           />
         )}

@@ -1,4 +1,5 @@
 import type { ProviderId } from '@/config/models';
+import type { ImageQuality } from '@/config/settings';
 
 import type { Listing } from './listingSchema';
 
@@ -7,6 +8,7 @@ export interface TokenUsage {
   inputTokens: number;
   /** The part of inputTokens billed at the cached rate. */
   cachedInputTokens: number;
+  /** Everything billed as output, including thinking tokens. */
   outputTokens: number;
 }
 
@@ -15,6 +17,8 @@ export interface GenerateListingInput {
   modelId: string;
   /** `data:image/jpeg;base64,...` URLs, all of the same item. */
   images: string[];
+  /** The photo size setting, which also sets the provider's image detail. */
+  imageQuality: ImageQuality;
   signal?: AbortSignal;
 }
 

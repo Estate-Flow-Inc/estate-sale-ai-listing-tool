@@ -61,3 +61,4 @@ export function subscribeSettings(listener: () => void) {
     listeners.delete(listener);
   };
 }
+

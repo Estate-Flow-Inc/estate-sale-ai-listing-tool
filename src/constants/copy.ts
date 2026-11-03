@@ -6,6 +6,8 @@
  * constants instead of writing copy inline.
  */
 
+import { GEMINI_API_KEYS_URL } from '@/config/constants';
+
 /** Brand name. Always "Estate Flow" (two words). Never "EstateFlow". */
 export const ESTATE_FLOW_GLOBAL_NAME = 'Estate Flow';
 
@@ -17,22 +19,22 @@ export const NAV = {
 };
 
 export const HERO = {
-  eyebrow: 'Free AI estate sale listing tool · Open source',
-  title: 'DIY AI listings. Pay for AI directly.',
-  body: 'Upload item photos and get titles, descriptions, condition notes and estimated resale values. Use your own OpenAI key and pay OpenAI directly. No credits to buy. No markup.',
+  eyebrow: 'Free AI estate sale listing tool · No credit card',
+  title: 'DIY AI listings. Free with Google.',
+  body: "Upload item photos and get titles, descriptions, condition notes and estimated resale values. It runs on Google Gemini, and Google gives you free AI every day, up to a daily limit. No credit card needed. Need more? Turn on Google billing and pay Google directly. No credits to buy. No markup.",
   cta: 'Try it now',
-  getKey: 'Get my API key',
+  getKey: 'Get my free API key',
 };
 
 export const HOW_IT_WORKS = {
   title: 'How it works',
   steps: [
-    { title: 'Get your OpenAI API key', body: 'Takes about 3 minutes. You add a few dollars of credit to your own OpenAI account.' },
-    { title: 'Drop in your item photos', body: 'One photo per item, up to 1,000 per batch.' },
+    { title: 'Get your free Gemini API key', body: 'Takes about a minute. Sign in to Google AI Studio with your Google account and copy the key it makes for you. No credit card needed.' },
+    { title: 'Drop in your item photos', body: 'One photo per item, up to 500 per batch.' },
     { title: 'Check the cost, then generate', body: 'You see the estimate before anything runs.' },
     { title: 'Review and download Excel', body: `Print it, share it, or import it into ${ESTATE_FLOW_GLOBAL_NAME}.` },
   ],
-  getKey: 'Get my API key',
+  getKey: 'Get my free API key',
   watch: 'Play the video for the full walkthrough.',
   start: 'Try it now',
   close: 'Close',
@@ -54,31 +56,31 @@ export const TRUST_POINTS = [
     body: "Kept in your browser, not on a server. Leave, refresh or close the page and it's gone.",
   },
   {
-    title: 'Photos go straight to OpenAI',
-    body: `Your browser talks to OpenAI directly. Nothing passes through ${ESTATE_FLOW_GLOBAL_NAME}. No tracking on this page.`,
+    title: 'Photos go straight to Google',
+    body: `Your browser talks to Google Gemini directly. Nothing passes through ${ESTATE_FLOW_GLOBAL_NAME}. No tracking on this page.`,
   },
   {
-    title: 'Your AI. Your API key. Your money.',
-    body: 'No subscription, no markup. Read every line of code on GitHub, or run your own copy.',
+    title: 'Free AI from Google, every day',
+    body: 'Google gives every Gemini key a free daily allowance. No credit card, no subscription, no markup. Read every line of code on GitHub, or run your own copy.',
   },
 ];
 
 export const MIDDLEMAN = {
   title: 'Why pay someone else a markup to use AI?',
-  body: 'AI listing tools often bundle AI usage into credits and charge a premium. We take a different approach: bring your own OpenAI key, see the estimated cost upfront, and pay OpenAI directly. No credits to buy. No markup from us.',
+  body: "AI listing tools often bundle AI usage into credits and charge a premium. We take a different approach: bring your own Gemini key and use Google's free daily allowance. Need more? Pay Google directly, with the cost shown upfront. No credits to buy. No markup from us.",
   theirsLabel: 'Third-party AI listing tools',
   theirsSteps: ['Your photos', 'Bundled credits + markup', 'AI'],
   oursLabel: `${ESTATE_FLOW_GLOBAL_NAME}'s free tool`,
-  oursSteps: ['Your photos', 'OpenAI'],
+  oursSteps: ['Your photos', 'Google Gemini'],
   perItem: 'per item',
   perItemEstimated: 'per item, estimated average',
   tableItems: 'Items',
   tableTypical: 'Typical AI listing tool',
-  tableYou: 'Your cost with',
+  tableYou: 'With Google billing on,',
   tableSaved: 'Potential savings',
   youreWelcome: "You're welcome.",
   footnote:
-    'Estimates assume one photo per item and typical listing length. Actual AI costs vary with photo size, model and how much is written. Third-party pricing reflects publicly listed credit packages, which may include other features.',
+    "On Google's free tier your cost is $0, within Google's daily limits. Paid estimates assume one photo per item and typical listing length. Actual AI costs vary with photo size, model and how much is written. Third-party pricing reflects publicly listed credit packages, which may include other features.",
 };
 
 export const ESTATE_FLOW_HUB = {
@@ -128,15 +130,25 @@ export const FAQ = {
   items: [
     {
       q: 'Is my API key safe?',
-      a: "It's kept in your browser only while this page is open, and cleared when you leave, refresh or close it. It's sent to OpenAI and nowhere else. This page runs no analytics or third-party scripts, and the source is public so you can check.",
+      a: "It's kept in your browser only while this page is open, and cleared when you leave, refresh or close it. It's sent to Google and nowhere else. This page runs no analytics or third-party scripts, and the source is public so you can check.",
     },
     {
-      q: 'How do I get an OpenAI key?',
-      a: 'Sign in at platform.openai.com, add a payment method and a few dollars of credit, then create a key at platform.openai.com/api-keys and paste it here. It takes about 3 minutes, and the walkthrough video shows every step.',
+      q: 'How do I get a Gemini key?',
+      a: 'Go to Google AI Studio and sign in with your Google account. AI Studio creates a key for you; copy it from the API keys page and paste it here. It takes about a minute and needs no credit card. The walkthrough video shows every step.',
+      /** This phrase in the answer becomes a link (new tab). */
+      link: { text: 'Google AI Studio', href: GEMINI_API_KEYS_URL },
     },
     {
       q: 'What does it cost?',
-      a: 'Nothing from us. OpenAI bills your account per request, usually pennies per hundred items. You see an estimate before every run.',
+      a: "Nothing from us, and nothing from Google either unless you turn on billing. Google's free tier has daily limits. With billing on, Google charges per request, usually under a dollar per hundred items. You see an estimate before every run.",
+    },
+    {
+      q: 'How many items can I do for free?',
+      a: "Google's free tier allows 500 listings a day, 15 a minute, on the model this tool uses. That covers most sales. For a bigger house or faster runs, turn on billing in Google AI Studio: the $5 minimum prepay covers about 2,000 items.",
+    },
+    {
+      q: 'Does Google see my photos?',
+      a: "Yes, Google processes them to write your listings. On the free tier, Google may use what you send to improve its products. Turn on billing in Google AI Studio (a $5 minimum prepay) and it won't.",
     },
     {
       q: 'I have my Excel file. Now what?',
@@ -176,7 +188,7 @@ export const PHOTOS = {
   label: 'Item photos',
   dropTitle: 'Drop photos here, or choose files',
   dropActive: 'Drop to add',
-  dropHint: 'JPG, PNG or HEIC. Up to 1,000 photos per batch.',
+  dropHint: 'JPG, PNG or HEIC. Up to 500 photos per batch.',
   takePhotos: 'Take photos',
   addMore: 'Add more',
   clearAll: 'Clear all',
@@ -185,8 +197,8 @@ export const PHOTOS = {
   summary: (count: number) => `${count} ${count === 1 ? 'photo' : 'photos'} ready`,
   processing: (done: number, total: number) => `Preparing ${done} of ${total}`,
   skipped: (count: number) =>
-    `${count} ${count === 1 ? 'file was' : 'files were'} skipped (not a photo, too large, or over the 1,000 photo limit).`,
-  atLimit: "That's the 1,000 photo limit for one batch. Generate these, then start a new batch.",
+    `${count} ${count === 1 ? 'file was' : 'files were'} skipped (not a photo, too large, or over the 500 photo limit).`,
+  atLimit: "That's 500 photos, the most for one batch and about what Google's free tier allows in a day. Generate these, then start a new batch.",
   showAll: (count: number) => `Show all ${count.toLocaleString('en-US')}`,
   showLess: 'Show less',
   more: (count: number) => `+${count.toLocaleString('en-US')} more`,
@@ -197,27 +209,27 @@ export const ESTIMATE = {
     count === 0 ? 'Add photos to start' : `Generate ${count} ${count === 1 ? 'listing' : 'listings'}`,
   waiting: 'Preparing photos...',
   title: 'Before you run',
-  yourCost: 'Your cost, using your own AI',
+  freeTier: "With Google's free daily allowance",
+  free: 'FREE',
+  yourCost: 'With Google billing turned on',
   competitor: 'Typical AI listing tool',
   savings: `${ESTATE_FLOW_GLOBAL_NAME} will save you`,
   footnote: (model: string, low: string, high: string) =>
-    `Using ${model}, billed by OpenAI to your account. Likely between ${low} and ${high} at current rates.`,
+    `No billing set up? It's free. Google limits free use per day and may use your photos to improve its AI. With billing (a $5 minimum prepay), Google charges you directly: ${model}, likely ${low} to ${high} at current rates.`,
   confirm: (count: number) => `Generate ${count} ${count === 1 ? 'listing' : 'listings'}`,
   cancel: 'Cancel',
 };
 
 export const WIZARD = {
-  steps: { key: 'Connect your AI', model: 'Pick a model', cost: 'Check the cost', run: 'Writing listings' },
+  steps: { key: 'Connect your AI', cost: 'Check the cost', run: 'Writing listings' },
   back: 'Back',
   next: 'Continue',
   close: 'Close',
   key: {
-    providerLabel: 'AI provider',
-    comingSoon: 'Coming soon',
     label: 'API key',
     show: 'Show',
     hide: 'Hide',
-    getKey: 'Get a key',
+    getKey: 'Get a free key',
     note: `Kept only while this page is open. Cleared when you leave, refresh or close it. Sent only to your AI provider, never to ${ESTATE_FLOW_GLOBAL_NAME}.`,
     checking: 'Checking key...',
     invalid: "That key didn't work. Check it and try again.",
@@ -225,24 +237,18 @@ export const WIZARD = {
     change: 'Change key',
     saved: 'Your key is kept only while this page is open.',
     remove: 'Remove my key',
+    freeTier: "Free keys work fine: Google allows about 500 listings a day. On the free tier, Google may use your photos to improve its AI. Turn on billing in Google AI Studio (a $5 minimum prepay) to opt out and lift the limit.",
     help: 'Need help?',
     watch: 'Watch the full walkthrough',
   },
-  model: {
-    help: 'Cost per 100 items at your photo size.',
-    recommended: 'Recommended',
-    per100: 'per 100 items',
-    descriptions: {
-      'gpt-5.6-luna': 'Cheapest. Great for most items.',
-      'gpt-5.4-mini': 'A bit sharper on brands and details.',
-      'gpt-5.6-terra': 'Most detailed. For valuable or tricky items.',
-    } as Record<string, string>,
-  },
   run: {
     progress: (done: number, total: number) => `${done} of ${total} done`,
-    spent: (amount: string) => `Spent so far: ${amount}`,
+    spent: (amount: string) => `At paid rates: ${amount} ($0 on the free tier)`,
     failed: (count: number) => `${count} failed`,
     background: 'You can close this. Listings keep writing in the background.',
+    busy: 'Google is seeing high demand. Retrying automatically.',
+    paced: (minutesLeft: number) =>
+      `Google's free tier allows 15 listings a minute, so we're going at that pace. About ${minutesLeft} ${minutesLeft === 1 ? 'minute' : 'minutes'} left. Turn on billing in Google AI Studio for full speed.`,
     stop: 'Stop',
     view: 'View listings',
     done: 'All done',
@@ -253,9 +259,11 @@ export const WIZARD = {
 export const RESULTS = {
   title: 'Your listings',
   summary: (done: number, total: number) => `${done} of ${total} ready`,
-  spent: (actual: string, estimated: string) => `Spent ${actual} (estimated ${estimated})`,
+  spent: (actual: string, estimated: string) =>
+    `${actual} at paid rates, estimated ${estimated}. $0 on Google's free tier.`,
   retry: 'Retry failed',
   writing: 'Writing...',
+  busy: 'Retrying...',
   queued: 'Waiting',
   failed: 'Failed',
   open: 'View details',
@@ -305,4 +313,10 @@ export const DISCLAIMER = {
     'You use your own AI provider account and are responsible for its charges and terms.',
     `This tool is provided as is, without warranty, under the MIT license. ${ESTATE_FLOW_GLOBAL_NAME} never receives your key, photos or listings.`,
   ],
+};
+
+export const DAILY_LIMIT = {
+  title: "You've used today's free listings",
+  body: "Google's free tier allows about 500 listings a day. Download your Excel now so you keep today's work, then come back tomorrow and add the remaining photos. Need more today? Turn on billing in Google AI Studio, or",
+  contact: 'contact us and we\'ll help',
 };

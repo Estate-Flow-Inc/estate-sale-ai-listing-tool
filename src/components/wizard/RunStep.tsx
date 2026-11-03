@@ -1,6 +1,8 @@
 import { CircleAlert } from 'lucide-react';
 
+import { DailyLimitNotice } from '@/components/common/DailyLimitNotice';
 import { Button } from '@/components/ui/button';
+import { FREE_TIER_RPM } from '@/config/limits';
 import { WIZARD } from '@/constants/copy';
 import { formatUsd } from '@/lib/format';
 import { useListingStore } from '@/store/listingStore';
@@ -8,14 +10,17 @@ import { costFromUsage } from '@/utils/costEstimator';
 
 /** Live progress while listings are written. */
 export function RunStep({ onView, onFixKey }: { onView: () => void; onFixKey: () => void }) {
-  const { items, running, modelId, fatalError, stop } = useListingStore();
+  const { items, running, modelId, fatalError, dailyLimitHit, paced, stop } = useListingStore();
 
   const total = items.length;
   const done = items.filter((i) => i.status === 'done').length;
   const failed = items.filter((i) => i.status === 'error').length;
-  const spent = modelId
-    ? items.reduce((sum, i) => sum + (i.usage ? costFromUsage(modelId, i.usage) : 0), 0)
-    : 0;
+  const busy = items.some((i) => i.busy);
+  // Each listing is priced by the model that actually wrote it.
+  const spent = items.reduce(
+    (sum, i) => sum + (i.usage ? costFromUsage(i.modelId ?? modelId ?? '', i.usage) : 0),
+    0
+  );
   const pct = total ? Math.round(((done + failed) / total) * 100) : 0;
 
   return (
@@ -37,13 +42,24 @@ export function RunStep({ onView, onFixKey }: { onView: () => void; onFixKey: ()
         {failed > 0 && <span className="text-[13px] text-danger-ink">{WIZARD.run.failed(failed)}</span>}
       </div>
 
-      {fatalError && (
+      {dailyLimitHit && <DailyLimitNotice />}
+      {fatalError && !dailyLimitHit && (
         <div role="alert" className="flex items-start gap-2 rounded-lg bg-[#f7e4e0] p-3 text-sm text-danger-ink">
           <CircleAlert className="mt-0.5 size-4 flex-none" aria-hidden="true" />
           <span>{fatalError}</span>
         </div>
       )}
 
+      {paced && running && (
+        <p role="status" className="rounded-lg bg-muted px-3 py-2 text-[13px]">
+          {WIZARD.run.paced(Math.ceil((total - done - failed) / FREE_TIER_RPM))}
+        </p>
+      )}
+      {busy && !paced && (
+        <p role="status" className="rounded-lg bg-muted px-3 py-2 text-[13px]">
+          {WIZARD.run.busy}
+        </p>
+      )}
       {running && <p className="text-[13px] text-muted-foreground">{WIZARD.run.background}</p>}
 
       <div className="flex justify-end gap-2">
@@ -52,7 +68,7 @@ export function RunStep({ onView, onFixKey }: { onView: () => void; onFixKey: ()
             {WIZARD.run.stop}
           </Button>
         )}
-        {fatalError && !running && (
+        {fatalError && !dailyLimitHit && !running && (
           <Button variant="outline" size="xl" onClick={onFixKey}>
             {WIZARD.run.fixKey}
           </Button>

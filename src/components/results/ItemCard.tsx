@@ -32,9 +32,9 @@ export function ItemCard({ item, onOpen }: { item: ListingItem; onOpen: () => vo
                   {RESULTS.failed}
                 </span>
               ) : item.status === 'generating' ? (
-                <span className="flex items-center gap-1.5">
-                  <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-                  {RESULTS.writing}
+                <span className="flex items-center gap-1.5 px-2 text-center">
+                  <Loader2 className="size-4 flex-none animate-spin" aria-hidden="true" />
+                  {item.busy ? RESULTS.busy : RESULTS.writing}
                 </span>
               ) : (
                 <span className="text-muted-foreground">{RESULTS.queued}</span>

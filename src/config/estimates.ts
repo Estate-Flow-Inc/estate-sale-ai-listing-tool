@@ -10,10 +10,10 @@ export const TOKEN_ESTIMATES = {
   /** One full listing as JSON (providers/listingSchema.ts). */
   outputTokens: 900,
   /**
-   * Per photo at detail "high", by the photo size setting. GPT-5.6 Luna: 32px patches x 1.2.
-   * 4:3 photo at 768px = 432 patches (519), 1024px = 768 (922), 1536px = 1,728 (2,074).
+   * Per photo. Gemini bills a fixed amount by media resolution, not pixels:
+   * medium = 560, high = 1,120 (see providers/gemini.ts MEDIA_RESOLUTION).
    */
-  imageTokens: { small: 520, balanced: 925, detailed: 2075 } satisfies Record<ImageQuality, number>,
+  imageTokens: { small: 560, balanced: 1120, detailed: 1120 } satisfies Record<ImageQuality, number>,
 };
 
 /** Shown as a range around the expected cost. */

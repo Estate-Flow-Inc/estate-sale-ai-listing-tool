@@ -1,6 +1,7 @@
 /** Guardrails for what a single browser session should take on. */
 
-export const MAX_PHOTOS = 1000;
+/** Matches Google's free daily limit (FREE_TIER_RPD), so a batch can always finish today. */
+export const MAX_PHOTOS = 500;
 
 /** Skip anything bigger. Phone photos are 2 to 12 MB; this catches odd files, not real photos. */
 export const MAX_PHOTO_BYTES = 50 * 1024 * 1024;
@@ -20,5 +21,18 @@ export const PHOTO_PROCESSING_CONCURRENCY = 3;
 /** What the file picker accepts. HEIC listed by extension because some browsers report no type. */
 export const ACCEPTED_IMAGE_TYPES = 'image/*,.heic,.heif';
 
-/** Listings generated at once. Low enough to stay under new accounts' rate limits. */
-export const GENERATION_CONCURRENCY = 4;
+/**
+ * Longest we wait for one AI request. Past this, that model is dropped for the
+ * rest of the session and the item moves to the next model.
+ */
+export const REQUEST_TIMEOUT_MS = 25_000;
+
+/** Listings generated at once. Low, because Gemini's free tier has tight per-minute limits. */
+export const GENERATION_CONCURRENCY = 2;
+
+/**
+ * Google's free tier for gemini-3.1-flash-lite (AI Studio rate limits, Nov 2026).
+ * Paid keys get far more. We only pace to FREE_TIER_RPM after Google says "slow down" (429).
+ */
+export const FREE_TIER_RPM = 15;
+export const FREE_TIER_RPD = 500;

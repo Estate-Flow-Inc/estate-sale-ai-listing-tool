@@ -2,7 +2,7 @@
 
 Turn item photos into estate sale listings. Free, open source, no account.
 
-Bring your own OpenAI key. Your photos go straight from your browser to OpenAI, with no middleman and no markup. Download an Excel inventory with photo thumbnails.
+Bring your own Google Gemini key. Your photos go straight from your browser to Google, with no middleman and no markup. Download an Excel inventory with photo thumbnails.
 
 **Use it:** [joinestateflow.com/tools/estate-sale-ai-listing-tool](https://joinestateflow.com/tools/estate-sale-ai-listing-tool)
 
@@ -12,7 +12,7 @@ Built by [Estate Flow](https://joinestateflow.com/?utm_source=ai-listing-tool&ut
 
 ## How it works
 
-1. Paste your OpenAI API key
+1. Paste your Google Gemini API key (free from [Google AI Studio](https://aistudio.google.com/app/apikey))
 2. Pick a model and see the cost estimate
 3. Add item photos
 4. Review and edit titles, descriptions, categories, condition and prices
@@ -21,13 +21,14 @@ Built by [Estate Flow](https://joinestateflow.com/?utm_source=ai-listing-tool&ut
 ## Your key and photos
 
 - Your API key is kept in `sessionStorage` only while the page is open, and cleared when you leave, refresh or close it.
-- Requests go directly from your browser to OpenAI. Nothing passes through Estate Flow.
+- Requests go directly from your browser to Google. Nothing passes through Estate Flow.
+- On Google's free tier, Google may use what you send to improve its products. Turn on billing in Google AI Studio to opt out.
 - No server, no login, no analytics on this page.
 - Your items are saved in your browser (IndexedDB) so a refresh doesn't lose your work.
 
 ## Cost
 
-You pay OpenAI directly at their published rates. With GPT-5.6 Luna, that's roughly $0.07 per 100 items. The app shows an estimate before every run.
+Google's free tier covers small batches. Past that, you pay Google directly at their published rates: with Gemini 3.8 Flash, roughly $0.75 per 100 items. The app shows an estimate before every run.
 
 ## About AI prices
 
@@ -48,7 +49,7 @@ yarn
 yarn dev
 ```
 
-Open the URL Vite prints and paste your OpenAI key.
+Open the URL Vite prints and paste your Gemini key.
 
 ### Scripts
 
@@ -71,7 +72,7 @@ Everything runs in the browser. There is no backend.
 
 ## Adding a provider
 
-Each provider is one file in `src/providers/` that implements the `Provider` interface in `types.ts`, including its model list and prices. Add the file, register it, and it shows up in the model picker.
+The tool uses Google Gemini (`src/providers/gemini.ts`). Every provider implements the `Provider` interface in `src/providers/types.ts`, so adding another means one file plus its models and prices in `src/config/models.ts`.
 
 ## Deploy
 

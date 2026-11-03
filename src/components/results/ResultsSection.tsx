@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { Container } from '@/components/common/Container';
+import { DailyLimitNotice } from '@/components/common/DailyLimitNotice';
 import { Button } from '@/components/ui/button';
 import { getModel } from '@/config/models';
 import { RESULTS_PAGE_SIZE } from '@/config/limits';
@@ -17,7 +18,7 @@ import { ItemDetail } from './ItemDetail';
 
 /** Grid of generated listings with actual spend vs estimate. */
 export function ResultsSection() {
-  const { items, running, modelId, retry } = useListingStore();
+  const { items, running, modelId, retry, dailyLimitHit } = useListingStore();
   const [settings] = useSettings();
   const [openId, setOpenId] = useState<string | null>(null);
   const [shown, setShown] = useState(RESULTS_PAGE_SIZE);
@@ -29,7 +30,10 @@ export function ResultsSection() {
   const runModel = modelId ?? settings.modelId;
   const apiKey = getApiKey(getModel(runModel).provider);
 
-  const spent = done.reduce((sum, i) => sum + (i.usage ? costFromUsage(runModel, i.usage) : 0), 0);
+  const spent = done.reduce(
+    (sum, i) => sum + (i.usage ? costFromUsage(i.modelId ?? runModel, i.usage) : 0),
+    0
+  );
   const estimated = estimateCost({
     modelId: runModel,
     itemCount: done.length,
@@ -57,6 +61,7 @@ export function ResultsSection() {
           )}
         </div>
 
+        {dailyLimitHit && <DailyLimitNotice />}
         <ExportPanel items={items} />
         <p className="-mt-3 text-[13px] text-muted-foreground">{DISCLAIMER.short}</p>
 

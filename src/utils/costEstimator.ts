@@ -1,5 +1,5 @@
 import { ESTIMATE_RANGE, TOKEN_ESTIMATES } from '@/config/estimates';
-import { getModel } from '@/config/models';
+import { getModel, MODELS } from '@/config/models';
 import { COMPETITOR_RATE_PER_ITEM } from '@/config/pricing';
 import type { ImageQuality } from '@/config/settings';
 import type { TokenUsage } from '@/providers/types';
@@ -27,12 +27,17 @@ export interface CostEstimate {
 /** Expected cost in USD of generating listings with a given model. */
 export function estimateCost({ modelId, itemCount, photoCount, imageQuality }: EstimateInput): CostEstimate {
   const model = getModel(modelId);
+  // The backup model may write some listings; the high end of the range covers
+  // the case where it writes all of them.
+  const start = Math.max(0, MODELS.findIndex((m) => m.id === modelId));
+  const priciest = MODELS.slice(start).reduce((a, b) => (b.outputPer1M > a.outputPer1M ? b : a));
   const inputTokens =
     itemCount * TOKEN_ESTIMATES.promptTokens + photoCount * TOKEN_ESTIMATES.imageTokens[imageQuality];
-  const outputTokens = itemCount * TOKEN_ESTIMATES.outputTokens;
 
-  const expected =
-    (inputTokens / 1_000_000) * model.inputPer1M + (outputTokens / 1_000_000) * model.outputPer1M;
+  const priceAt = (m: typeof model) =>
+    (inputTokens / 1_000_000) * m.inputPer1M +
+    ((itemCount * (TOKEN_ESTIMATES.outputTokens + m.estThinkingTokens)) / 1_000_000) * m.outputPer1M;
+  const expected = priceAt(model);
   const competitor = {
     low: itemCount * COMPETITOR_RATE_PER_ITEM.low,
     high: itemCount * COMPETITOR_RATE_PER_ITEM.high,
@@ -41,7 +46,7 @@ export function estimateCost({ modelId, itemCount, photoCount, imageQuality }: E
   return {
     expected,
     low: expected * ESTIMATE_RANGE.low,
-    high: expected * ESTIMATE_RANGE.high,
+    high: Math.max(expected * ESTIMATE_RANGE.high, priceAt(priciest)),
     perItem: itemCount > 0 ? expected / itemCount : 0,
     competitor,
     savings: {

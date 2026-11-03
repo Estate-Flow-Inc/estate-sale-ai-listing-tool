@@ -1,32 +1,50 @@
 /**
- * AI models offered in the picker, with list prices per 1M tokens (USD).
+ * Gemini models, in fallback order, with list prices per 1M tokens (USD).
+ * One model on purpose: it's the only one that tested reliable. The fallback code
+ * in store/listingStore.ts still works if more are ever added. If it stays overloaded (503) or unavailable, the
+ * next item rotates to the next model automatically. Users never choose.
  * Prices change: update PRICES_CHECKED_AT whenever you touch them.
- * Only vision-capable models belong here.
  */
 
-export type ProviderId = 'openai' | 'anthropic' | 'gemini';
+export type ProviderId = 'gemini';
 
 export interface ModelOption {
   id: string;
   provider: ProviderId;
   label: string;
   inputPer1M: number;
-  /** Repeated prompt prefixes (system prompt + schema) the provider cached. */
+  /** Implicitly cached input (repeated system prompt). Roughly 10% of input. */
   cachedInputPer1M: number;
+  /** Output, including thinking tokens. */
   outputPer1M: number;
+  /** Lowest thinking level we send. Thinking tokens bill as output. */
+  thinkingLevel: 'minimal' | 'low';
+  /** Extra output tokens we expect from thinking at that level, for estimates. */
+  estThinkingTokens: number;
 }
 
-export const PRICES_CHECKED_AT = '2026-10-30';
+export const PRICES_CHECKED_AT = '2026-11-03';
 
 export const MODELS: ModelOption[] = [
-  // https://developers.openai.com/api/docs/models/gpt-5.6-luna
-  { id: 'gpt-5.6-luna', provider: 'openai', label: 'GPT-5.6 Luna', inputPer1M: 0.2, cachedInputPer1M: 0.02, outputPer1M: 1.2 },
-  { id: 'gpt-5.4-mini', provider: 'openai', label: 'GPT-5.4 mini', inputPer1M: 0.75, cachedInputPer1M: 0.075, outputPer1M: 4.5 },
-  { id: 'gpt-5.6-terra', provider: 'openai', label: 'GPT-5.6 Terra', inputPer1M: 2, cachedInputPer1M: 0.2, outputPer1M: 12 },
+  {
+    // Stable, fast, cheapest, and the most generous free daily allowance.
+    // In testing it was the only model that answered reliably.
+    id: 'gemini-3.1-flash-lite',
+    provider: 'gemini',
+    label: 'Gemini 3.1 Flash-Lite',
+    inputPer1M: 0.25,
+    cachedInputPer1M: 0.025,
+    outputPer1M: 1.5,
+    thinkingLevel: 'minimal',
+    estThinkingTokens: 0,
+  },
+  // Tested and dropped (Nov 2026): gemini-3.5-flash-lite (timeouts), gemini-3.8-flash (503 overloaded),
+  // gemini-3.7-flash (429, tiny free allowance), gemini-3.6-flash (too slow).
+  // gemini-3.5-flash costs more ($1.50 / $9.00). gemini-3.1-pro-preview: no free tier.
 ];
 
-export const DEFAULT_MODEL_ID = 'gpt-5.6-luna';
+export const DEFAULT_MODEL_ID = MODELS[0].id;
 
 export function getModel(id: string): ModelOption {
-  return MODELS.find((m) => m.id === id) ?? MODELS.find((m) => m.id === DEFAULT_MODEL_ID)!;
+  return MODELS.find((m) => m.id === id) ?? MODELS[0];
 }

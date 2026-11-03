@@ -7,10 +7,9 @@ import { WALKTHROUGH_YOUTUBE_URL } from '@/config/constants';
 import type { ProviderId } from '@/config/models';
 import { WIZARD } from '@/constants/copy';
 import { clearApiKey, setApiKey } from '@/lib/apiKeyStorage';
-import { cn } from '@/lib/utils';
-import { getProvider, PROVIDER_ORDER, PROVIDERS, ProviderError } from '@/providers';
+import { getProvider, ProviderError } from '@/providers';
 
-/** Pick a provider and paste a key. The key is checked before moving on. */
+/** Paste a Gemini key. It's checked before anything is spent. */
 export function KeyStep({
   providerId,
   initialKey,
@@ -52,29 +51,6 @@ export function KeyStep({
         void submit();
       }}
     >
-      <fieldset className="flex flex-col gap-2">
-        <legend className="mb-2 text-sm font-medium">{WIZARD.key.providerLabel}</legend>
-        <div className="grid grid-cols-3 gap-2">
-          {PROVIDER_ORDER.map((p) => {
-            const live = Boolean(PROVIDERS[p.id]);
-            const selected = p.id === providerId;
-            return (
-              <div
-                key={p.id}
-                aria-disabled={!live}
-                className={cn(
-                  'flex flex-col gap-0.5 rounded-lg border p-3 text-sm',
-                  selected ? 'border-[1.5px] border-accent-warm bg-[#faf7f2]' : 'border-border',
-                  !live && 'opacity-60'
-                )}
-              >
-                <span className="font-medium">{p.label}</span>
-                {!live && <span className="text-xs text-muted-foreground">{WIZARD.key.comingSoon}</span>}
-              </div>
-            );
-          })}
-        </div>
-      </fieldset>
 
       <div className="flex flex-col gap-2">
         <div className="flex items-baseline justify-between gap-3">
@@ -125,6 +101,7 @@ export function KeyStep({
           <Lock className="mt-0.5 size-3.5 flex-none" aria-hidden="true" />
           {WIZARD.key.note}
         </p>
+        <p className="rounded-lg bg-muted px-3 py-2 text-[13px] text-muted-foreground">{WIZARD.key.freeTier}</p>
         {WALKTHROUGH_YOUTUBE_URL && (
           <p className="text-[13px] text-muted-foreground">
             {WIZARD.key.help}{' '}

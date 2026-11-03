@@ -21,6 +21,10 @@ export function CostConfirm({
   return (
     <div className="flex flex-col gap-5">
       <dl className="flex flex-col gap-2.5 rounded-xl border-[1.5px] border-accent-warm bg-[#faf7f2] p-4 text-sm">
+        <div className="flex justify-between gap-3 font-semibold">
+          <dt>{ESTIMATE.freeTier}</dt>
+          <dd className="font-mono">{ESTIMATE.free}</dd>
+        </div>
         <div className="flex justify-between gap-3">
           <dt>{ESTIMATE.yourCost}</dt>
           <dd className="font-mono">~{formatUsd(estimate.expected)}</dd>

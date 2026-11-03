@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ExternalLink } from '@/components/common/ExternalLink';
 import { buttonVariants } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { OPENAI_API_KEYS_URL, WALKTHROUGH_YOUTUBE_URL } from '@/config/constants';
+import { GEMINI_API_KEYS_URL, WALKTHROUGH_YOUTUBE_URL } from '@/config/constants';
 import { HOW_IT_WORKS } from '@/constants/copy';
 
 /** Header "How it works": the basic steps, then the full walkthrough. */
@@ -38,7 +38,7 @@ export function HowItWorksDialog({ triggerClassName }: { triggerClassName?: stri
                   <span className="font-medium">{step.title}</span>
                   <span className="text-sm text-muted-foreground">{step.body}</span>
                   {i === 0 && (
-                    <ExternalLink href={OPENAI_API_KEYS_URL} className="text-sm font-medium text-accent-ink hover:underline">
+                    <ExternalLink href={GEMINI_API_KEYS_URL} className="text-sm font-medium text-accent-ink hover:underline">
                       {HOW_IT_WORKS.getKey}
                     </ExternalLink>
                   )}
