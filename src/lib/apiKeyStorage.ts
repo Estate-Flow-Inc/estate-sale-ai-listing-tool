@@ -3,6 +3,17 @@ import type { ProviderId } from '@/config/models';
 /** API keys live in sessionStorage: this tab only, gone when it closes. */
 const storageKey = (provider: ProviderId) => `estate-sale-ai-listing-tool:key:${provider}`;
 
+const listeners = new Set<() => void>();
+const notify = () => listeners.forEach((fn) => fn());
+
+/** Re-render hooks when a key is saved or removed. */
+export function subscribeApiKey(fn: () => void) {
+  listeners.add(fn);
+  return () => {
+    listeners.delete(fn);
+  };
+}
+
 export function getApiKey(provider: ProviderId): string {
   try {
     return sessionStorage.getItem(storageKey(provider)) ?? '';
@@ -17,6 +28,7 @@ export function setApiKey(provider: ProviderId, key: string) {
   } catch {
     // Storage blocked: the key still works for this page load.
   }
+  notify();
 }
 
 /**
@@ -33,4 +45,5 @@ export function clearApiKey(provider: ProviderId) {
   } catch {
     // Nothing to clear.
   }
+  notify();
 }

@@ -19,8 +19,11 @@ export interface ListingItem {
   photoIds: string[];
   /** The item's compressed photos. Kept here so removing a photo doesn't break the listing. */
   images: Blob[];
-  /** Object URL of the first photo's thumbnail, owned by this item. */
+  /** First photo's small thumbnail, and an object URL for it owned by this item. */
+  thumb: Blob;
   thumbUrl: string;
+  /** Keeps the original order when restored from browser storage. */
+  order: number;
   status: ItemStatus;
   /** Model that wrote the listing. */
   modelId?: string;
@@ -60,9 +63,21 @@ let controller: AbortController | null = null;
  * SKUs: a short random code per page session, so two batches imported into the
  * same Estate Flow sale never collide (its importer skips duplicate SKUs).
  */
-const SKU_BATCH = Math.random().toString(36).slice(2, 5).toUpperCase();
+const newSkuBatch = () => Math.random().toString(36).slice(2, 5).toUpperCase();
+let skuBatch = newSkuBatch();
 let skuCounter = 0;
-const nextSku = () => `AI-${SKU_BATCH}-${String(++skuCounter).padStart(4, '0')}`;
+const nextSku = () => `AI-${skuBatch}-${String(++skuCounter).padStart(4, '0')}`;
+
+export interface SkuState {
+  batch: string;
+  counter: number;
+}
+export const getSkuState = (): SkuState => ({ batch: skuBatch, counter: skuCounter });
+/** Restored batch keeps its SKU series; `null` starts a fresh one. */
+export function setSkuState(state: SkuState | null) {
+  skuBatch = state?.batch ?? newSkuBatch();
+  skuCounter = state?.counter ?? 0;
+}
 
 /**
  * Model routing. Items alternate between models, and a failed item moves to the
@@ -214,7 +229,9 @@ export const useListingStore = create<ListingState>()((set, get) => {
           sku: nextSku(),
           photoIds: [p.id],
           images: [p.image!.blob],
+          thumb: p.image!.thumb,
           thumbUrl: URL.createObjectURL(p.image!.thumb),
+          order: p.order,
           status: 'queued',
         }));
       set((s) => ({ items: [...s.items, ...fresh] }));

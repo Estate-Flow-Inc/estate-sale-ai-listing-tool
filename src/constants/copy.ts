@@ -244,8 +244,6 @@ export const WIZARD = {
     freeTier: "Free keys work fine: Google allows about 500 listings a day. On the free tier, Google may use your photos to improve its AI. Turn on billing in Google AI Studio (a $5 minimum prepay) to opt out and lift the limit.",
     help: 'Need help?',
     watch: 'Watch the full walkthrough',
-    inlineLabel: 'Have a Gemini API key? Paste it here.',
-    save: 'Save key',
   },
   run: {
     progress: (done: number, total: number) => `${done} of ${total} done`,
@@ -268,6 +266,13 @@ export const RESULTS = {
   spent: (actual: string, estimated: string) =>
     `${actual} at paid rates, estimated ${estimated}. $0 on Google's free tier.`,
   retry: 'Retry failed',
+  resume: 'Finish the rest',
+  saved: 'Saved in this browser until you start over.',
+  startOver: 'Start over',
+  startOverTitle: 'Start over?',
+  startOverBody: 'This clears your photos and listings from this browser. Download your .zip first if you need it.',
+  startOverConfirm: 'Clear and start over',
+  cancel: 'Cancel',
   writing: 'Writing...',
   busy: 'Retrying...',
   queued: 'Waiting',

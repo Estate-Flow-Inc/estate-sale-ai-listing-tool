@@ -16,6 +16,8 @@ export interface Photo {
   name: string;
   originalSize: number;
   status: PhotoStatus;
+  /** Keeps the original order when restored from browser storage. */
+  order: number;
   /** Object URL of the small thumbnail. */
   previewUrl?: string;
   image?: PreparedImage;
@@ -32,6 +34,8 @@ interface PhotoState {
   removePhoto: (id: string) => void;
   clearPhotos: () => void;
 }
+
+let nextOrder = Date.now();
 
 const IMAGE_EXT = /\.(jpe?g|png|webp|gif|heic|heif|avif|bmp|tiff?)$/i;
 
@@ -63,6 +67,7 @@ export const usePhotoStore = create<PhotoState>()((set, get) => {
           name: file.name,
           originalSize: file.size,
           status: 'processing' as const,
+          order: nextOrder++,
         },
       }));
       set((state) => ({ photos: [...state.photos, ...entries.map((e) => e.photo)] }));

@@ -5,11 +5,11 @@ import { GenerateWizard } from '@/components/wizard/GenerateWizard';
 import { getModel } from '@/config/models';
 import { ESTIMATE, WIZARD } from '@/constants/copy';
 import { useSettings } from '@/hooks/useSettings';
-import { clearApiKey, getApiKey } from '@/lib/apiKeyStorage';
+import { useApiKey } from '@/hooks/useApiKey';
+import { clearApiKey } from '@/lib/apiKeyStorage';
 import { unlistedPhotos, useListingStore } from '@/store/listingStore';
 import { usePhotoStore } from '@/store/photoStore';
 
-import { InlineKeyField } from './InlineKeyField';
 import { PhotoIntake } from './PhotoIntake';
 
 /** Photos first. Everything technical happens in the wizard modal. */
@@ -19,17 +19,9 @@ export function SetupCard() {
   const [wizardOpen, setWizardOpen] = useState(false);
   const [settings] = useSettings();
   const providerId = getModel(settings.modelId).provider;
-  const [hasKey, setHasKey] = useState(() => Boolean(getApiKey(providerId)));
+  const hasKey = Boolean(useApiKey(providerId));
 
-  const handleWizardChange = (open: boolean) => {
-    setWizardOpen(open);
-    if (!open) setHasKey(Boolean(getApiKey(providerId)));
-  };
-
-  const removeKey = () => {
-    clearApiKey(providerId);
-    setHasKey(false);
-  };
+  const removeKey = () => clearApiKey(providerId);
 
   const pending = unlistedPhotos(photos, items);
   const processing = photos.some((p) => p.status === 'processing');
@@ -40,7 +32,6 @@ export function SetupCard() {
   return (
     <div className="flex flex-col gap-6 rounded-2xl border border-border bg-card p-5 sm:p-7">
       <PhotoIntake />
-      {!hasKey && <InlineKeyField providerId={providerId} onSaved={() => setHasKey(true)} />}
       <Button
         size="xl"
         disabled={pending.length === 0 || processing}
@@ -64,7 +55,7 @@ export function SetupCard() {
       {wizardOpen && (
         <GenerateWizard
           open={wizardOpen}
-          onOpenChange={handleWizardChange}
+          onOpenChange={setWizardOpen}
           photos={pending}
           onViewResults={viewResults}
         />

@@ -1,15 +1,19 @@
+import { X } from 'lucide-react';
 import { useState } from 'react';
 
 import { Container } from '@/components/common/Container';
 import { DailyLimitNotice } from '@/components/common/DailyLimitNotice';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import { KeyStep } from '@/components/wizard/KeyStep';
 import { getModel } from '@/config/models';
 import { RESULTS_PAGE_SIZE } from '@/config/limits';
-import { DISCLAIMER, RESULTS } from '@/constants/copy';
+import { DISCLAIMER, RESULTS, WIZARD } from '@/constants/copy';
 import { useSettings } from '@/hooks/useSettings';
-import { getApiKey } from '@/lib/apiKeyStorage';
+import { useApiKey } from '@/hooks/useApiKey';
 import { formatUsd } from '@/lib/format';
 import { useListingStore } from '@/store/listingStore';
+import { startOver } from '@/store/persist';
 import { costFromUsage, estimateCost } from '@/utils/costEstimator';
 
 import { ExportPanel } from './ExportPanel';
@@ -20,15 +24,25 @@ import { ItemDetail } from './ItemDetail';
 export function ResultsSection() {
   const { items, running, modelId, retry, dailyLimitHit } = useListingStore();
   const [settings] = useSettings();
+  const runModel = modelId ?? settings.modelId;
+  const apiKey = useApiKey(getModel(runModel).provider);
   const [openId, setOpenId] = useState<string | null>(null);
   const [shown, setShown] = useState(RESULTS_PAGE_SIZE);
+  const [keyOpen, setKeyOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   if (items.length === 0) return null;
 
   const done = items.filter((i) => i.status === 'done');
   const retryable = items.some((i) => i.status === 'error' || i.status === 'queued');
-  const runModel = modelId ?? settings.modelId;
-  const apiKey = getApiKey(getModel(runModel).provider);
+  const unfinished = items.some((i) => i.status === 'queued');
+
+  // After a refresh the key is gone (on purpose): ask for it, then carry on.
+  const continueRun = () => {
+    if (apiKey) retry({ apiKey, modelId: runModel });
+    else setKeyOpen(true);
+  };
+
 
   const spent = done.reduce(
     (sum, i) => sum + (i.usage ? costFromUsage(i.modelId ?? runModel, i.usage) : 0),
@@ -53,12 +67,20 @@ export function ResultsSection() {
                 <span className="font-mono"> · {RESULTS.spent(formatUsd(spent), formatUsd(estimated))}</span>
               )}
             </p>
+            <p className="text-[13px] text-muted-foreground">{RESULTS.saved}</p>
           </div>
-          {retryable && !running && apiKey && (
-            <Button variant="outline" size="xl" onClick={() => retry({ apiKey, modelId: runModel })}>
-              {RESULTS.retry}
-            </Button>
-          )}
+          <div className="flex flex-wrap gap-2">
+            {!running && (
+              <Button variant="ghost" size="xl" onClick={() => setConfirmOpen(true)}>
+                {RESULTS.startOver}
+              </Button>
+            )}
+            {retryable && !running && (
+              <Button variant="outline" size="xl" onClick={continueRun}>
+                {unfinished ? RESULTS.resume : RESULTS.retry}
+              </Button>
+            )}
+          </div>
         </div>
 
         {dailyLimitHit && <DailyLimitNotice />}
@@ -79,6 +101,50 @@ export function ResultsSection() {
           >
             {RESULTS.showMore(Math.min(shown, items.length), items.length)}
           </Button>
+        )}
+
+        <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+          <DialogContent className="max-w-md">
+            <DialogTitle className="font-serif text-2xl">{RESULTS.startOverTitle}</DialogTitle>
+            <DialogDescription className="mt-2 text-sm text-muted-foreground">{RESULTS.startOverBody}</DialogDescription>
+            <div className="mt-6 flex justify-end gap-2">
+              <DialogClose render={<Button variant="outline" size="xl" />}>{RESULTS.cancel}</DialogClose>
+              <Button
+                variant="destructive"
+                size="xl"
+                onClick={() => {
+                  setConfirmOpen(false);
+                  void startOver();
+                }}
+              >
+                {RESULTS.startOverConfirm}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {keyOpen && (
+          <Dialog open onOpenChange={setKeyOpen}>
+            <DialogContent>
+              <div className="mb-5 flex items-start justify-between gap-4">
+                <DialogTitle className="font-serif text-2xl">{WIZARD.steps.key}</DialogTitle>
+                <DialogClose
+                  aria-label={WIZARD.close}
+                  className="-mt-1 -mr-2 flex size-10 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted"
+                >
+                  <X className="size-5" aria-hidden="true" />
+                </DialogClose>
+              </div>
+              <KeyStep
+                providerId={getModel(runModel).provider}
+                initialKey=""
+                onDone={(key) => {
+                  setKeyOpen(false);
+                  retry({ apiKey: key, modelId: runModel });
+                }}
+              />
+            </DialogContent>
+          </Dialog>
         )}
 
         <ItemDetail key={openId} item={items.find((i) => i.id === openId) ?? null} onClose={() => setOpenId(null)} />
