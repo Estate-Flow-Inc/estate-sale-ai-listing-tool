@@ -1,5 +1,7 @@
 import { FREE_TIER_RPM } from '@/config/limits';
 
+import { setBackgroundTimeout } from './backgroundTimer';
+
 /**
  * Spaces out request starts once we know the key is rate limited (free tier).
  * Google's per-minute limit is per model, so each model gets its own schedule.
@@ -27,12 +29,12 @@ export async function waitForSlot(modelId: string, signal?: AbortSignal) {
   if (at > now) await sleep(at - now, signal);
 }
 
-/** setTimeout as a promise that ends early on abort. */
+/** A wait that ends early on abort, and keeps time in a background tab. */
 export function sleep(ms: number, signal?: AbortSignal) {
   return new Promise<void>((resolve) => {
-    const timer = setTimeout(resolve, ms);
+    const cancel = setBackgroundTimeout(resolve, ms);
     signal?.addEventListener('abort', () => {
-      clearTimeout(timer);
+      cancel();
       resolve();
     });
   });

@@ -88,7 +88,7 @@ export const ESTATE_FLOW_HUB = {
   title: 'Listings are the easy part. We run the rest of the business.',
   theirs: 'Other AI listing tools are an AI middleman.',
   ours: `${ESTATE_FLOW_GLOBAL_NAME} is the hub for your whole estate sale business.`,
-  cta: 'Sign up and import your file',
+  cta: `Get Started with ${ESTATE_FLOW_GLOBAL_NAME}`,
   features: [
     { title: 'Team management', body: 'Bring your crew and flex workers into every sale.' },
     {
@@ -121,7 +121,7 @@ export const ESTATE_FLOW_BAND = {
     `We gave the AI part away because it's the easy part. ${ESTATE_FLOW_GLOBAL_NAME} is built for running the sale: real comps, inventory, listing and the field work in between.`,
     `${ESTATE_FLOW_GLOBAL_NAME} imports this exact Excel file. Sign up, drop it in, and your inventory is ready in minutes.`,
   ],
-  cta: 'Sign up and import your file',
+  cta: `Get Started with ${ESTATE_FLOW_GLOBAL_NAME}`,
   note: 'Bring your Excel file to get started quickly.',
 };
 
@@ -249,15 +249,22 @@ export const WIZARD = {
     progress: (done: number, total: number) => `${done} of ${total} done`,
     spent: (amount: string) => `At paid rates: ${amount} ($0 on the free tier)`,
     failed: (count: number) => `${count} failed`,
-    background: 'You can close this. Listings keep writing in the background.',
+    eta: (minutes: number) =>
+      minutes < 1 ? 'Less than a minute left' : `About ${minutes} ${minutes === 1 ? 'minute' : 'minutes'} left`,
+    awayTitle: 'Go grab a coffee.',
+    away: "AI is writing your listings behind the scenes. Close this window to watch them appear below, or switch to another tab and get on with your day. Just keep this tab open. We'll chime when they're ready.",
     busy: 'Google is seeing high demand. Retrying automatically.',
-    paced: (minutesLeft: number) =>
-      `Google's free tier limits listings per minute, so we're going at that pace. About ${minutesLeft} ${minutesLeft === 1 ? 'minute' : 'minutes'} left. Turn on billing in Google AI Studio for full speed.`,
-    stop: 'Stop',
+    paced:
+      "Google's free tier caps how many listings we can write a minute, so big batches take a while. Turn on billing in Google AI Studio for full speed.",
     view: 'View listings',
     done: 'All done',
     fixKey: 'Fix key',
   },
+};
+
+export const RUN_ALERTS = {
+  progressTitle: (done: number, total: number) => `(${done}/${total}) Writing listings...`,
+  doneTitle: (count: number) => `${count} ${count === 1 ? 'listing' : 'listings'} ready`,
 };
 
 export const RESULTS = {

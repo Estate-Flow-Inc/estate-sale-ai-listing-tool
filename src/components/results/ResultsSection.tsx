@@ -14,6 +14,7 @@ import { useApiKey } from '@/hooks/useApiKey';
 import { formatUsd } from '@/lib/format';
 import { useListingStore } from '@/store/listingStore';
 import { startOver } from '@/store/persist';
+import { unlockChime } from '@/lib/runAlerts';
 import { costFromUsage, estimateCost } from '@/utils/costEstimator';
 
 import { ExportPanel } from './ExportPanel';
@@ -39,7 +40,10 @@ export function ResultsSection() {
 
   // After a refresh the key is gone (on purpose): ask for it, then carry on.
   const continueRun = () => {
-    if (apiKey) retry({ apiKey, modelId: runModel });
+    if (apiKey) {
+      unlockChime();
+      retry({ apiKey, modelId: runModel });
+    }
     else setKeyOpen(true);
   };
 
@@ -140,6 +144,7 @@ export function ResultsSection() {
                 initialKey=""
                 onDone={(key) => {
                   setKeyOpen(false);
+                  unlockChime();
                   retry({ apiKey: key, modelId: runModel });
                 }}
               />

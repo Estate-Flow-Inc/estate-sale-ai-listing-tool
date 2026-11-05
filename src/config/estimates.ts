@@ -13,7 +13,7 @@ export const TOKEN_ESTIMATES = {
    * Per photo. Gemini bills a fixed amount by media resolution, not pixels:
    * medium = 560, high = 1,120 (see providers/gemini.ts MEDIA_RESOLUTION).
    */
-  imageTokens: { small: 560, balanced: 1120, detailed: 1120 } satisfies Record<ImageQuality, number>,
+  imageTokens: { small: 560, balanced: 560, detailed: 1120 } satisfies Record<ImageQuality, number>,
 };
 
 /** Shown as a range around the expected cost. */

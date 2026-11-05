@@ -16,7 +16,7 @@ const MAX_OUTPUT_TOKENS = 4096;
 /** Gemini bills images by resolution tier, not pixels (see config/estimates.ts). */
 const MEDIA_RESOLUTION: Record<ImageQuality, string> = {
   small: 'MEDIA_RESOLUTION_MEDIUM',
-  balanced: 'MEDIA_RESOLUTION_HIGH',
+  balanced: 'MEDIA_RESOLUTION_MEDIUM', // plenty to identify an item, half the tokens, faster
   detailed: 'MEDIA_RESOLUTION_HIGH',
 };
 

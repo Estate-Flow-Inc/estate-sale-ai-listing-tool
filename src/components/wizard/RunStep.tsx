@@ -1,17 +1,42 @@
-import { CircleAlert } from 'lucide-react';
+import { CircleAlert, Coffee } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 import { DailyLimitNotice } from '@/components/common/DailyLimitNotice';
 import { Button } from '@/components/ui/button';
-import { FREE_TIER_RPM } from '@/config/limits';
+import { FREE_TIER_RPM, GENERATION_CONCURRENCY } from '@/config/limits';
 import { MODELS } from '@/config/models';
 import { WIZARD } from '@/constants/copy';
 import { formatUsd } from '@/lib/format';
-import { useListingStore } from '@/store/listingStore';
+import { useListingStore, type ListingItem } from '@/store/listingStore';
 import { costFromUsage } from '@/utils/costEstimator';
+
+/** Seconds per listing before we have real numbers: free-tier pace or typical response time. */
+const GUESS_SECONDS_PER_ITEM = Math.max(60 / (FREE_TIER_RPM * MODELS.length), 8 / GENERATION_CONCURRENCY);
+
+/** Minutes left: from this run's actual pace once a few are done, else a guess. */
+function minutesLeft(items: ListingItem[], startedAt: number | null, runTotal: number) {
+  const remaining = items.filter((i) => i.status === 'queued' || i.status === 'generating').length;
+  const finished = runTotal - remaining;
+  const elapsed = startedAt ? Date.now() - startedAt : 0;
+  const seconds =
+    finished >= 3 && elapsed > 0
+      ? (remaining * elapsed) / finished / 1000
+      : remaining * GUESS_SECONDS_PER_ITEM;
+  return Math.ceil(seconds / 60);
+}
 
 /** Live progress while listings are written. */
 export function RunStep({ onView, onFixKey }: { onView: () => void; onFixKey: () => void }) {
-  const { items, running, modelId, fatalError, dailyLimitHit, paced, stop } = useListingStore();
+  const { items, running, runStartedAt, runTotal, modelId, fatalError, dailyLimitHit, paced } =
+    useListingStore();
+
+  // Refresh the estimate even when nothing finishes for a while.
+  const [, tick] = useState(0);
+  useEffect(() => {
+    if (!running) return;
+    const id = setInterval(() => tick((n) => n + 1), 15_000);
+    return () => clearInterval(id);
+  }, [running]);
 
   const total = items.length;
   const done = items.filter((i) => i.status === 'done').length;
@@ -40,8 +65,23 @@ export function RunStep({ onView, onFixKey }: { onView: () => void; onFixKey: ()
         >
           <div className="h-full bg-accent-warm transition-[width] duration-300" style={{ width: `${pct}%` }} />
         </div>
-        {failed > 0 && <span className="text-[13px] text-danger-ink">{WIZARD.run.failed(failed)}</span>}
+        <div className="flex justify-between gap-3 text-[13px]">
+          <span className="text-muted-foreground">
+            {running && WIZARD.run.eta(minutesLeft(items, runStartedAt, runTotal))}
+          </span>
+          {failed > 0 && <span className="text-danger-ink">{WIZARD.run.failed(failed)}</span>}
+        </div>
       </div>
+
+      {running && (
+        <div className="flex items-start gap-3 rounded-xl border border-border bg-warm-bg p-4">
+          <Coffee className="mt-0.5 size-5 flex-none text-accent-ink" aria-hidden="true" />
+          <div className="flex flex-col gap-1">
+            <p className="text-sm font-medium">{WIZARD.run.awayTitle}</p>
+            <p className="text-[13px] text-muted-foreground">{WIZARD.run.away}</p>
+          </div>
+        </div>
+      )}
 
       {dailyLimitHit && <DailyLimitNotice />}
       {fatalError && !dailyLimitHit && (
@@ -53,7 +93,7 @@ export function RunStep({ onView, onFixKey }: { onView: () => void; onFixKey: ()
 
       {paced && running && (
         <p role="status" className="rounded-lg bg-muted px-3 py-2 text-[13px]">
-          {WIZARD.run.paced(Math.ceil((total - done - failed) / (FREE_TIER_RPM * MODELS.length)))}
+          {WIZARD.run.paced}
         </p>
       )}
       {busy && !paced && (
@@ -61,14 +101,8 @@ export function RunStep({ onView, onFixKey }: { onView: () => void; onFixKey: ()
           {WIZARD.run.busy}
         </p>
       )}
-      {running && <p className="text-[13px] text-muted-foreground">{WIZARD.run.background}</p>}
 
       <div className="flex justify-end gap-2">
-        {running && (
-          <Button variant="outline" size="xl" onClick={stop}>
-            {WIZARD.run.stop}
-          </Button>
-        )}
         {fatalError && !dailyLimitHit && !running && (
           <Button variant="outline" size="xl" onClick={onFixKey}>
             {WIZARD.run.fixKey}

@@ -25,13 +25,16 @@ export const PHOTO_PROCESSING_CONCURRENCY = Math.min(
 export const ACCEPTED_IMAGE_TYPES = 'image/*,.heic,.heif';
 
 /**
- * Longest we wait for one AI request. Past this, that model is dropped for the
- * rest of the session and the item moves to the next model.
+ * Longest we wait for one AI request. Past this, the item retries, on the other
+ * model when one is available.
  */
 export const REQUEST_TIMEOUT_MS = 25_000;
 
-/** Listings generated at once. Low, because Gemini's free tier has tight per-minute limits. */
-export const GENERATION_CONCURRENCY = 2;
+/**
+ * Listings generated at once. Free-tier pacing still keeps each model under its
+ * per-minute limit; this keeps the pipe full while responses take a few seconds.
+ */
+export const GENERATION_CONCURRENCY = 6;
 
 /**
  * Google's free tier for gemini-3.1-flash-lite (AI Studio rate limits, Nov 2026).

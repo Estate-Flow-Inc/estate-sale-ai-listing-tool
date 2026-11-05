@@ -42,6 +42,9 @@ export interface RunConfig {
 interface ListingState {
   items: ListingItem[];
   running: boolean;
+  /** When the current run started, and how many items it had left then. For the time estimate. */
+  runStartedAt: number | null;
+  runTotal: number;
   /** Model used for the last run, for actual cost. */
   modelId: string | null;
   /** Auth or billing problem: stops the whole run, since every request would fail. */
@@ -176,7 +179,7 @@ export const useListingStore = create<ListingState>()((set, get) => {
     controller = new AbortController();
     const { signal } = controller;
     const provider = getProvider(getModel(modelId).provider);
-    set({ running: true, fatalError: null, dailyLimitHit: false, modelId });
+    set({ running: true, runStartedAt: Date.now(), runTotal: ids.length, fatalError: null, dailyLimitHit: false, modelId });
 
     await forEachWithConcurrency(ids, GENERATION_CONCURRENCY, async (id) => {
       const item = get().items.find((i) => i.id === id);
@@ -215,6 +218,8 @@ export const useListingStore = create<ListingState>()((set, get) => {
   return {
     items: [],
     running: false,
+    runStartedAt: null,
+    runTotal: 0,
     modelId: null,
     fatalError: null,
     dailyLimitHit: false,

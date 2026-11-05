@@ -7,6 +7,7 @@ import { getModel } from '@/config/models';
 import { WIZARD } from '@/constants/copy';
 import { useSettings } from '@/hooks/useSettings';
 import { getApiKey } from '@/lib/apiKeyStorage';
+import { unlockChime } from '@/lib/runAlerts';
 import { cn } from '@/lib/utils';
 import { useListingStore } from '@/store/listingStore';
 import type { Photo } from '@/store/photoStore';
@@ -48,6 +49,7 @@ export function GenerateWizard({
   const handleOpenChange = (next: boolean) => onOpenChange(next);
 
   const confirm = () => {
+    unlockChime();
     start(photos, { apiKey, modelId: settings.modelId });
     setStep('run');
   };
