@@ -36,7 +36,7 @@ export const GITHUB_REPO_URL = 'https://github.com/Estate-Flow-Inc/estate-sale-a
 export const GEMINI_API_KEYS_URL = 'https://aistudio.google.com/app/apikey';
 
 /** YouTube video ID for the full walkthrough. Empty: the play button does nothing yet. */
-export const WALKTHROUGH_YOUTUBE_ID = '';
+export const WALKTHROUGH_YOUTUBE_ID = 'qHUtN4sEJyk';
 
 /** Still image shown before play (1280x720 screenshot), in /public. */
 export const WALKTHROUGH_POSTER = `${import.meta.env.BASE_URL}walkthrough-poster.jpg`;
