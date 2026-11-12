@@ -12,11 +12,11 @@ Built by [Estate Flow](https://joinestateflow.com/?utm_source=ai-listing-tool&ut
 
 ## How it works
 
-1. Paste your Google Gemini API key (free from [Google AI Studio](https://aistudio.google.com/app/apikey))
-2. Pick a model and see the cost estimate
-3. Add item photos
-4. Review and edit titles, descriptions, categories, condition and prices
-5. Download your inventory (.zip: Excel plus photos)
+1. Add item photos (one per item, up to 500 per batch)
+2. Paste your Google Gemini API key (free from [Google AI Studio](https://aistudio.google.com/app/apikey), no credit card)
+3. Check the cost: $0 on Google's free tier
+4. Review titles, descriptions, categories, condition and suggested prices
+5. Download your inventory (.zip: Excel plus photos, named by SKU)
 
 ## Your key and photos
 
@@ -28,7 +28,7 @@ Built by [Estate Flow](https://joinestateflow.com/?utm_source=ai-listing-tool&ut
 
 ## Cost
 
-Google's free tier covers small batches. Past that, you pay Google directly at their published rates: with Gemini 3.8 Flash, roughly $0.75 per 100 items. The app shows an estimate before every run.
+Google's free tier allows about 500 listings a day at no cost. Items alternate between Gemini 3.1 Flash-Lite and Gemini 3.5 Flash-Lite, and a failed item retries on the other model. With billing turned on in Google AI Studio, you pay Google directly at their published rates, usually well under a dollar per hundred items. The app shows an estimate before every run.
 
 ## About AI prices
 
@@ -65,7 +65,7 @@ Open the URL Vite prints and paste your Gemini key.
 - Vite, React, TypeScript
 - Tailwind CSS and shadcn/ui
 - ExcelJS (Excel with thumbnails), fflate (zip)
-- Zustand (state), idb-keyval (IndexedDB)
+- Zustand (state), IndexedDB (saved work)
 
 Everything runs in the browser. There is no backend.
 

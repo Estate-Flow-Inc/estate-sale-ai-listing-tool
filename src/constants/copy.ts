@@ -15,7 +15,6 @@ export const TOOL_NAME = 'AI Estate Sale Listing';
 
 export const NAV = {
   faq: 'FAQ',
-  source: 'View source',
 };
 
 export const HERO = {
